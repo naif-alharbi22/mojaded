@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مُجدد | إدارة الاشتراكات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+</head>
+
+<body class="bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100 transition duration-300">
+
+<!-- Navbar -->
+<nav class="flex justify-between items-center px-6 md:px-12 py-6">
+    <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+        مُجدد
+    </h1>
+
+    <div class="flex items-center gap-4">
+
+        <!-- Dark Mode Button -->
+       
+        <a href="{% url 'login' %}" 
+           class="px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:scale-105 transition">
+            تسجيل الدخول
+        </a>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="text-center py-24 px-6">
+
+    <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+        إدارة الاشتراكات
+        <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            باحتراف
+        </span>
+    </h2>
+
+    <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10">
+        أنشئ خطط، أدر الفواتير، تابع التجديدات،
+        وتحكم في الاشتراكات — كل ذلك من منصة واحدة ذكية.
+    </p>
+
+    <div class="flex justify-center gap-4">
+        <a href="{% url 'login' %}" 
+           class="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xl hover:scale-105 transition">
+            ابدأ الآن
+        </a>
+
+        <a href="#features" 
+           class="px-8 py-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+            تعرف أكثر
+        </a>
+    </div>
+
+</section>
+
+<!-- Features -->
+<section id="features" class="py-20 px-6 md:px-12">
+    <h3 class="text-3xl font-bold text-center mb-16">لماذا مُجدد؟</h3>
+
+    <div class="grid md:grid-cols-3 gap-10">
+
+        <div class="p-8 rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition">
+            <div class="text-4xl mb-4">💳</div>
+            <h4 class="text-xl font-semibold mb-3">فواتير تلقائية</h4>
+            <p class="text-gray-600 dark:text-gray-400">
+                إنشاء فواتير وتجديد الاشتراكات تلقائيًا بدون تدخل يدوي.
+            </p>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition">
+            <div class="text-4xl mb-4">⚙️</div>
+            <h4 class="text-xl font-semibold mb-3">خطط مرنة</h4>
+            <p class="text-gray-600 dark:text-gray-400">
+                اشتراكات شهرية، سنوية، وإضافات لمرة واحدة بكل سهولة.
+            </p>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition">
+            <div class="text-4xl mb-4">📊</div>
+            <h4 class="text-xl font-semibold mb-3">تحكم كامل</h4>
+            <p class="text-gray-600 dark:text-gray-400">
+                راقب الحالات، المتأخرات، وحالة كل اشتراك في لوحة واحدة.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-24 text-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+
+    <h3 class="text-3xl font-bold mb-6">
+        جاهز تبدأ إدارة اشتراكاتك؟
+    </h3>
+
+    <a href="{% url 'login' %}"
+       class="px-8 py-3 bg-white text-purple-700 font-semibold rounded-xl shadow-lg hover:scale-105 transition">
+        تسجيل الدخول
+    </a>
+
+</section>
+
+<!-- Footer -->
+<footer class="text-center py-8 text-sm text-gray-500 dark:text-gray-600">
+    © 2026 مُجدد — جميع الحقوق محفوظة
+</footer>
+
+<script>
+function toggleDark() {
+    document.documentElement.classList.toggle('dark')
+}
+</script>
+
+</body>
+</html>
