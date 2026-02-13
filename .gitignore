@@ -11,6 +11,7 @@ site
 .coverage*
 coverage.xml
 .netlify
+node_modules
 test.db
 log.txt
 Pipfile.lock

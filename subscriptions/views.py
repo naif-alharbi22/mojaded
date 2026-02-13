@@ -12,3 +12,6 @@ def paywall(request):
 
 def account_inactive(request):
     return render(request, "account_inactive.html")
+
+def subscriptions(request):
+    return render(request, "subscription/index.html")

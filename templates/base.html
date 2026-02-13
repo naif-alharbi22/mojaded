@@ -1,13 +1,164 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
-    <link href="{% static 'css/output.css' %}" rel="stylesheet" type="text/css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{% block title %}مُجدد{% endblock %}</title>
+
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
-<body>
-    
+
+<body class="min-h-screen bg-gray-50">
+
+
+
+
+<div class="drawer lg:drawer-open">
+
+  <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+
+  <!-- Content -->
+  <div class="drawer-content flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="navbar bg-white shadow-sm border-b border-gray-200 px-6">
+
+      <div class="flex-none lg:hidden">
+        <label for="main-drawer" class="btn btn-ghost btn-square">
+          ☰
+        </label>
+      </div>
+
+      <!-- Logo -->
+      <div class="flex-1 text-lg font-bold">
+        <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          مُجدد
+        </span>
+      </div>
+
+      <!-- User -->
+      <div class="flex-none">
+        <div class="dropdown dropdown-end">
+          <div tabindex="0" class="btn btn-ghost">
+            {{ request.user.username }}
+          </div>
+          <ul tabindex="0" class="menu menu-sm dropdown-content bg-white rounded-xl shadow-lg mt-3 w-40 p-2">
+            <li><a href="#" class="text-error">تسجيل الخروج</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </nav>
+
+    <!-- Main Content -->
+    <main class="p-8">
+        {% block content %}{% endblock %}
+    </main>
+
+  </div>
+
+  <!-- Sidebar -->
+  <div class="drawer-side">
+    <label for="main-drawer" class="drawer-overlay"></label>
+
+    <aside class="w-72 min-h-full bg-white border-l border-gray-200 flex flex-col">
+
+    <!-- Logo Area -->
+    <div class="px-6 py-5 border-b border-gray-100">
+        <h1 class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            مُجدد
+        </h1>
+    </div>
+
+    <!-- Menu -->
+    <div class="flex-1 px-4 py-6 space-y-6 text-sm">
+
+        <!-- Section -->
+        <div>
+            <p class="text-gray-400 text-xs mb-3">الرئيسية</p>
+            <ul class="space-y-1">
+
+                <li>
+                    <a href="{% url 'dashboard:dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-purple-50 text-purple-600 font-medium">
+                        <i data-lucide="home" class="w-4 h-4"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- Section -->
+        <div>
+            <p class="text-gray-400 text-xs mb-3">الإدارة</p>
+            <ul class="space-y-1">
+
+                <li>
+                    <a href="{% url 'subscriptions:subscriptions' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                        <i data-lucide="credit-card" class="w-4 h-4"></i>
+                        <span>الاشتراكات</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                        <span>الفواتير</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        <span>العملاء</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-200 pt-6">
+            <p class="text-gray-400 text-xs mb-3">النظام</p>
+            <ul class="space-y-1">
+
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                        <span>⚙️</span>
+                        <span>الإعدادات</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- User Footer -->
+    <div class="border-t border-gray-200 p-4 flex items-center gap-3 bg-gray-50">
+        <div class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">
+            {{ request.user.username|first|upper }}
+        </div>
+        <div>
+            <p class="text-sm font-medium">{{ request.user.username }}</p>
+            <p class="text-xs text-gray-400">حساب نشط</p>
+        </div>
+    </div>
+
+</aside>
+
+  </div>
+
+</div>
+<script>
+  lucide.createIcons();
+   document.body.addEventListener("htmx:afterSwap", function() {
+    lucide.createIcons();
+  });
+</script>
 </body>
 </html>

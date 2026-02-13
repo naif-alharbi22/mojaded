@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import account_inactive
-
+from . import views
 app_name = "subscriptions"
 
 urlpatterns = [
-    path("account-inactive/", account_inactive, name="account_inactive"),
+    path("account-inactive/", views.account_inactive, name="account_inactive"),
+    path("" , views.subscriptions, name="subscriptions"),
 ]

@@ -4,5 +4,5 @@ from .views import view_dashboard
 app_name = "dashboard"
 
 urlpatterns = [
-    path("dashboard/", view_dashboard, name="dashboard"),
+    path("", view_dashboard, name="dashboard"),
 ]
