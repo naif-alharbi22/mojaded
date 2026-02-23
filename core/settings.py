@@ -42,7 +42,12 @@ INSTALLED_APPS = [
     "customers",
     "subscriptions",
     "billing",
+    "template_partials",
+    "setting",
 ]
+
+
+AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -50,11 +55,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "core.middleware.FixedTimezoneMiddleware",
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "core.middleware.OrganizationAccessMiddleware",
-    "core.middleware.PlatformAccessMiddleware",
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'core.middleware.PlatformAccessMiddleware',
 
 ]

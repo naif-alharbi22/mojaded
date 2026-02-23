@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}لوحة التحكم{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4 ">
+    <h1 class="text-2xl font-bold">الفواتير</h1>
+    <div class="flex items-center gap-2">
+        <input type="search" placeholder="search" class="input page-search-input w-64" name="search"
+            hx-get="#"
+            hx-trigger="input changed delay:500ms, keyup[key=='Enter'], submit" 
+            hx-target="#table-voucher" hx-select="#table-voucher" hx-swap="outerHTML" value="{{ search }}" />
+    <button class="btn btn-soft btn-primary" hx-get="{% url 'billing:new_invoices' %}" hx-target="#main-content" hx-swap="beforeend">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        إضافة فاتورة جديدة
+    </button>
+    </div>  
+</div>
+<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+  <table class="table">
+    <!-- head -->
+    <thead>
+      <tr>
+        <th>رقم الفاتورة</th>
+        <th>المشترك</th>
+        <th>رقم الأشتراك</th>
+        <th>تاريخ الفاتورة</th>
+        <th>الإجمالي (شامل الضريبة)</th>
+        <th>الإجمالي (غير شامل الضريبة)</th>
+        <th>ضريبة القيمة المضافة</th>
+        <th>معاينة</th>
+        
+
+      </tr>
+    </thead>
+    <tbody>
+      <!-- row 1 -->
+      <tr>
+        <th>1</th>
+        <td>Cy Ganderton</td>
+        <td>12</td>
+        <td>2024-07-01</td>
+        <td>$45</td>
+        <td>$545</td>
+        <td>$43</td>
+        <td><i data-lucide="eye" class="w-4 h-4"></i></td>
+      </tr>
+      <!-- row 2 -->
+      <tr>
+        <th>2</th>
+        <td>Hart Hagerty</td>
+        <td>12</td>
+        <td>2024-07-01</td>
+        <td>$45</td>
+        <td>$545</td>
+        <td>$43</td>
+        <td><i data-lucide="eye" class="w-4 h-4"></i></td>
+      </tr>
+      <!-- row 3 -->
+      <tr>
+        <th>3</th>
+        <td>Brice Swyre</td>
+        <td>12</td>
+        <td>2024-07-01</td>
+        <td>$45</td>
+        <td>$545</td>
+        <td>$43</td>
+        <td><i data-lucide="eye" class="w-4 h-4"></i></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

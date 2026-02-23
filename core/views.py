@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.contrib.auth import logout
 
 def landing_page(request):
     return render(request, "landing.html")
@@ -35,3 +36,8 @@ def login_view(request):
         return redirect("dashboard:dashboard")
 
     return render(request, "login.html", {"next": next_url})
+
+def logout_view(request):
+    
+    logout(request)
+    return redirect("landing")

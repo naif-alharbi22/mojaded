@@ -3,6 +3,7 @@ from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
 
+
 class Invoice(models.Model):
     STATUS_CHOICES = [
         ("pending", "Pending"),
@@ -10,16 +11,29 @@ class Invoice(models.Model):
         ("overdue", "Overdue"),
         ("cancelled", "Cancelled"),
     ]
+    INVOICE_TYPE = [
+    ("subscription", "Subscription"),
+    ("manual", "Manual"),
+    ("adjustment", "Adjustment"),
+]
 
     organization = models.ForeignKey(
         "organizations.Organization",
         on_delete=models.CASCADE,
         related_name="invoices"
     )
+    invoice_type = models.CharField(
+        max_length=20,
+        choices=INVOICE_TYPE,
+        default="subscription"
+    )
+
 
     subscription = models.ForeignKey(
         "subscriptions.Subscription",
-        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
         related_name="invoices"
     )
 

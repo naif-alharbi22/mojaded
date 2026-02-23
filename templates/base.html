@@ -12,17 +12,17 @@
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 
-<body class="min-h-screen bg-gray-50">
+<body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}' class="min-h-screen bg-gray-50">
 
 
 
 
-<div class="drawer lg:drawer-open">
+<div class="drawer lg:drawer-open w-full">
 
   <input id="main-drawer" type="checkbox" class="drawer-toggle" />
 
   <!-- Content -->
-  <div class="drawer-content flex flex-col">
+  <div class="drawer-content flex flex-col w-full">
 
     <!-- Navbar -->
     <nav class="navbar bg-white shadow-sm border-b border-gray-200 px-6">
@@ -47,7 +47,7 @@
             {{ request.user.username }}
           </div>
           <ul tabindex="0" class="menu menu-sm dropdown-content bg-white rounded-xl shadow-lg mt-3 w-40 p-2">
-            <li><a href="#" class="text-error">تسجيل الخروج</a></li>
+            <li><a href="{% url 'logout' %}" class="text-error">تسجيل الخروج</a></li>
           </ul>
         </div>
       </div>
@@ -55,7 +55,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="p-8">
+    <main id="main-content" class="p-4 md:p-8 w-full">
         {% block content %}{% endblock %}
     </main>
 
@@ -63,12 +63,13 @@
 
   <!-- Sidebar -->
   <div class="drawer-side">
-    <label for="main-drawer" class="drawer-overlay"></label>
+    
 
-    <aside class="w-72 min-h-full bg-white border-l border-gray-200 flex flex-col">
-
+    <aside class="w-72 lg:w-72  min-h-full bg-white border-l border-gray-200 flex flex-col">
+            
     <!-- Logo Area -->
-    <div class="px-6 py-5 border-b border-gray-100">
+    <div class="px-6 py-5 flex justify-between items-center border-b border-gray-100">
+      
         <h1 class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
             مُجدد
         </h1>
@@ -104,15 +105,15 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                <!-- <li>
+                    <a href="{% url 'billing:billing' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
                         <i data-lucide="file-text" class="w-4 h-4"></i>
                         <span>الفواتير</span>
                     </a>
-                </li>
+                </li> -->
 
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                    <a href="{% url 'customers:customers' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
                         <i data-lucide="users" class="w-4 h-4"></i>
                         <span>العملاء</span>
                     </a>
@@ -141,7 +142,11 @@
     <!-- User Footer -->
     <div class="border-t border-gray-200 p-4 flex items-center gap-3 bg-gray-50">
         <div class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">
+          {% if request.user.image %}
+            <img src="{{ request.user.image.url }}" alt="Profile Image" class="w-10 h-10 rounded-full">
+          {% else %}
             {{ request.user.username|first|upper }}
+          {% endif %}
         </div>
         <div>
             <p class="text-sm font-medium">{{ request.user.username }}</p>
@@ -159,6 +164,15 @@
    document.body.addEventListener("htmx:afterSwap", function() {
     lucide.createIcons();
   });
+  document.addEventListener("DOMContentLoaded", function () {
+  window.closeModal = function (el) {
+        const modal = el.closest('dialog.modal, .modal');
+        if (!modal) return;
+
+        modal.classList.remove('modal-open');
+        setTimeout(() => modal.remove(), 250);
+      }
+});
 </script>
 </body>
 </html>

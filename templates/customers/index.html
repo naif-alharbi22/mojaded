@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load partials %}
+{% block title %}لوحة التحكم{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4 ">
+    <h1 class="text-2xl font-bold">العملاء</h1>
+    <div class="flex items-center gap-2">
+     <form 
+    method="get"
+    hx-get="{% url 'customers:customers' %}"
+    hx-trigger="input changed delay:500ms from:input[name='search'], keyup[key=='Enter']"
+    hx-target="#table-customers"
+    hx-select="#table-customers"
+    hx-swap="outerHTML"
+    class="flex items-center gap-2">
+
+    <input type="search"
+        placeholder="search"
+        class="input page-search-input w-64"
+        name="search"
+        value="{{ search }}" />
+
+</form>
+    <button class="btn btn-soft btn-primary" hx-get="{% url 'customers:new_customer' %}" hx-target="#main-content" hx-swap="beforeend">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        إضافة عميل جديد
+    </button>
+    </div>  
+</div>
+<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+  {% partialdef content %}
+  <table class="table" id="table-customers">
+    <!-- head -->
+    <thead>
+      <tr>
+        <th>رقم العميل</th>
+        <th>الاسم</th>
+        <th>البريد الإلكتروني</th>
+        <th>رقم الهاتف</th>
+        <th>تاريخ الانضمام</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+      <tr>
+        <th>{{ customer.id }}</th>
+        <td>{{ customer.name }}</td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.phone }}</td>
+        <td>{{ customer.created_at }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center py-4">لا يوجد عملاء بعد.</td>
+      </tr>
+      {% endfor %}
+      
+    </tbody>
+  </table>
+  {% endpartialdef %}{% partial content %}
+</div>
+
+{% endblock %}

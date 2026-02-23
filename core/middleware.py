@@ -1,6 +1,8 @@
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.conf import settings
+from django.utils import timezone
+
 
 
 class OrganizationAccessMiddleware:
@@ -56,3 +58,14 @@ class PlatformAccessMiddleware:
                 return redirect("login")
 
         return self.get_response(request)
+    
+
+class FixedTimezoneMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        timezone.activate("Asia/Riyadh")  
+        response = self.get_response(request)
+        timezone.deactivate()
+        return response

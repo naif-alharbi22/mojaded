@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   content: [
     "./templates/**/*.html",
     "./**/templates/**/*.html",
@@ -7,4 +7,7 @@ export default {
     extend: {},
   },
   plugins: [require("daisyui")],
-};
+  daisyui: {
+    themes: ["light", "dark", "corporate"],
+  },
+}

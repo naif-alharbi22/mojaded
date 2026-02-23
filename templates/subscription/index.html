@@ -1,44 +1,97 @@
 {% extends "base.html" %}
+{% load partials %}
 
 {% block title %}لوحة التحكم{% endblock %}
 
 {% block content %}
+<div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+    <h1 class="text-2xl font-bold">الاشتراكات</h1>
 
-<div class="overflow-x-auto">
-  <table class="table">
-    <!-- head -->
-    <thead>
-      <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Job</th>
-        <th>Favorite Color</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- row 1 -->
-      <tr>
-        <th>1</th>
-        <td>Cy Ganderton</td>
-        <td>Quality Control Specialist</td>
-        <td>Blue</td>
-      </tr>
-      <!-- row 2 -->
-      <tr>
-        <th>2</th>
-        <td>Hart Hagerty</td>
-        <td>Desktop Support Technician</td>
-        <td>Purple</td>
-      </tr>
-      <!-- row 3 -->
-      <tr>
-        <th>3</th>
-        <td>Brice Swyre</td>
-        <td>Tax Accountant</td>
-        <td>Red</td>
-      </tr>
-    </tbody>
-  </table>
+    <div class="flex items-center gap-2">
+
+        <!-- ✅ SEARCH FORM -->
+        <form 
+            method="get"
+            hx-get="{% url 'subscriptions:subscriptions' %}"
+            hx-trigger="input changed delay:500ms from:input[name='search'], keyup[key=='Enter']"
+            hx-target="#table-subscriptions"
+            hx-select="#table-subscriptions"
+            hx-swap="outerHTML"
+            class="flex items-center gap-2">
+
+            <input type="search"
+                placeholder="search"
+                class="input page-search-input w-64"
+                name="search"
+                value="{{ search }}" />
+        </form>
+
+        <button class="btn btn-soft btn-primary"
+            hx-get="{% url 'subscriptions:new_subscriptions' %}"
+            hx-target="#main-content"
+            hx-swap="beforeend">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            إضافة اشتراك جديد
+        </button>
+
+    </div>
+</div>
+
+<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+
+    {% partialdef content %}
+    <table class="table" id="table-subscriptions">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>الاسم</th>
+                <th>الخطة</th>
+                <th>تاريخ البداية</th>
+                <th>تاريخ النهاية</th>
+                <th>مبلغ الاشتراك</th>
+                <th>تاريخ التجديد</th>
+                <th>الحالة</th>
+                <th>تعديل</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for subscription in subscriptions %}
+            <tr>
+                <th>{{ forloop.counter }}</th>
+                <td>{{ subscription.customer.name }}</td>
+                <td>{{ subscription.plan.name }}</td>
+                <td>{{ subscription.start_date }}</td>
+                <td>{{ subscription.next_billing_date }}</td>
+                <td>{{ subscription.amount }}</td>
+                <td>{{ subscription.next_billing_date }}</td>
+                <td>
+                    <span class="badge badge-success">
+                        {{ subscription.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-soft btn-sm"
+                        hx-get="{% url 'subscriptions:edit_subscription' subscription.id %}"
+                        hx-target="#main-content"
+                        hx-swap="beforeend">
+                        <i data-lucide="edit" class="w-4 h-4"></i>
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center py-4">
+                    لا توجد اشتراكات بعد.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endpartialdef %}
+    
+    {% partial content %}
+
 </div>
 
 {% endblock %}

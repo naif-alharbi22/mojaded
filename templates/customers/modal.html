@@ -1,0 +1,93 @@
+{% load i18n %}
+{% load static %}
+
+<dialog id="modal" class="modal modal-open">
+    
+<form
+    method="post"
+    hx-post="{% url 'customers:new_customer' %}"
+    hx-target="#modal"
+    hx-swap="innerHTML"
+    class="modal-box max-w-2xl p-0 overflow-hidden rounded-2xl">
+
+    {% csrf_token %}
+
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white">
+        <h3 class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            إضافة عميل جديد
+        </h3>
+
+        <button type="button" onclick="closeModal(this)">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 space-y-5 bg-gray-50">
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-error text-sm">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <!-- Name -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">الاسم</span>
+            </label>
+            <input type="text" name="name"
+                   value="{{ form.name.value|default:'' }}"
+                   class="input input-bordered w-full focus:border-purple-500"
+                   required>
+            {% if form.name.errors %}
+                <span class="text-red-500 text-sm mt-1">
+                    {{ form.name.errors.0 }}
+                </span>
+            {% endif %}
+        </div>
+
+        <!-- Email -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">البريد الإلكتروني</span>
+            </label>
+            <input type="email" name="email"
+                   value="{{ form.email.value|default:'' }}"
+                   class="input input-bordered w-full focus:border-purple-500">
+            {% if form.email.errors %}
+                <span class="text-red-500 text-sm mt-1">
+                    {{ form.email.errors.0 }}
+                </span>
+            {% endif %}
+        </div>
+
+        <!-- Phone -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">رقم الجوال</span>
+            </label>
+            <input type="text" name="phone"
+                   value="{{ form.phone.value|default:'' }}"
+                   class="input input-bordered w-full focus:border-purple-500">
+            {% if form.phone.errors %}
+                <span class="text-red-500 text-sm mt-1">
+                    {{ form.phone.errors.0 }}
+                </span>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 border-t border-gray-200 bg-white flex justify-end gap-3">
+        <button type="submit"
+            class="btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-none hover:opacity-90">
+            إنشاء
+        </button>
+    </div>
+
+</form>
+
+</dialog>

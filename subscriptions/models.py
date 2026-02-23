@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ValidationError
 from organizations.models import Organization
 from customers.models import Customer
 from dateutil.relativedelta import relativedelta
@@ -33,11 +34,18 @@ class Plan(models.Model):
 
 class Subscription(models.Model):
     STATUS_CHOICES = [
-        ("active", "Active"),
-        ("past_due", "Past Due"),
-        ("cancelled", "Cancelled"),
+    ("pending", "Pending"),
+    ("active", "Active"),        
+    ("past_due", "Past Due"),
+    ("trial", "Trial"), 
+    ("paused", "Paused"),
+    ("cancelled", "Cancelled"), 
+    ("expired", "Expired"),        
+]
+    TYPE_CHOICES = [
+        ("yearly", "Yearly"),
+        ("monthly", "Monthly"),
     ]
-
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
@@ -49,7 +57,7 @@ class Subscription(models.Model):
         on_delete=models.CASCADE,
         related_name="subscriptions"
     )
-
+    subscription_type = models.CharField(max_length=50, default="monthly", choices=TYPE_CHOICES)
     plan = models.ForeignKey(
         Plan,
         on_delete=models.SET_NULL,
@@ -69,32 +77,38 @@ class Subscription(models.Model):
         choices=STATUS_CHOICES,
         default="active",
     )
+    duration_months = models.PositiveIntegerField(default=1)
+
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     note = models.TextField(blank=True, null=True)
 
+    
     def save(self, *args, **kwargs):
-        if not self.amount and self.plan:
-            self.amount = self.plan.amount
 
-        if not self.next_billing_date and self.plan and self.start_date:
-            if self.plan.billing_cycle == "monthly":
-                self.next_billing_date = self.start_date + relativedelta(months=1)
-            elif self.plan.billing_cycle == "yearly":
-                self.next_billing_date = self.start_date + relativedelta(years=1)
+        if self.start_date:
+
+            duration = self.duration_months or 1
+
+            if self.subscription_type == "monthly":
+                self.next_billing_date = self.start_date + relativedelta(
+                    months=duration
+                )
+
+            elif self.subscription_type == "yearly":
+                self.next_billing_date = self.start_date + relativedelta(
+                    years=duration
+                )
 
         super().save(*args, **kwargs)
+    
+    def clean(self):
+        if self.duration_months <= 0:
+            raise ValidationError("Duration must be greater than zero.")
 
-    def generate_invoice(self):
-        return Invoice.objects.create(
-            organization=self.organization,
-            subscription=self,
-            amount=self.total_amount,
-            issue_date=timezone.now().date(),
-            due_date=self.next_billing_date,
-        )
 
+    
     
     class Meta:
         indexes = [
