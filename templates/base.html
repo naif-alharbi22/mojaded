@@ -1,108 +1,156 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}مُجدد{% endblock %}</title>
 
-    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <link href="{% static 'css/output.css' %}" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-</head>
+    <script type="module">
+      document.addEventListener("DOMContentLoaded", function () {
+        htmx.on("htmx:afterSwap", (e) => {
+          const target = e.detail.target;
+          const response = e.detail.xhr?.response;
 
-<body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}' class="min-h-screen bg-gray-50">
+          // Close modal if response contains toast OOB swap
+          if (
+            target.matches("dialog.modal, .modal") &&
+            response &&
+            response.includes("hx-swap-oob")
+          ) {
+            // Prevent running multiple times
+            if (target.dataset.closing) return;
+            target.dataset.closing = "true";
 
+            // Check if toast has data-close-modal="false" attribute
+            const toastCloseModal = response.match(
+              /data-close-modal="(false|true)"/,
+            );
+            const shouldCloseFromToast = toastCloseModal
+              ? toastCloseModal[1] === "true"
+              : true;
+            // Check for auto-close attribute on modal
+            const autoClose = target.getAttribute("auto-close")
+              ? target.getAttribute("auto-close") == "true"
+              : true;
 
+            // Only close if both modal and toast allow it
+            if (autoClose && shouldCloseFromToast) {
+              // Ensure browser processes before starting close animation
+              requestAnimationFrame(() => {
+                target.classList.remove("modal-open");
+                setTimeout(() => target.remove(), 500);
+              });
+            }
+            return;
+          }
+        });
+      });
+    </script>
+  </head>
 
+  <body
+    hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
+    class="min-h-screen bg-gray-50"
+  >
+    <div class="drawer lg:drawer-open w-full">
+      <input id="main-drawer" type="checkbox" class="drawer-toggle" />
 
-<div class="drawer lg:drawer-open w-full">
-
-  <input id="main-drawer" type="checkbox" class="drawer-toggle" />
-
-  <!-- Content -->
-  <div class="drawer-content flex flex-col w-full">
-
-    <!-- Navbar -->
-    <nav class="navbar bg-white shadow-sm border-b border-gray-200 px-6">
-
-      <div class="flex-none lg:hidden">
-        <label for="main-drawer" class="btn btn-ghost btn-square">
-          ☰
-        </label>
-      </div>
-
-      <!-- Logo -->
-      <div class="flex-1 text-lg font-bold">
-        <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-          مُجدد
-        </span>
-      </div>
-
-      <!-- User -->
-      <div class="flex-none">
-        <div class="dropdown dropdown-end">
-          <div tabindex="0" class="btn btn-ghost">
-            {{ request.user.username }}
+      <!-- Content -->
+      <div class="drawer-content flex flex-col w-full">
+        <!-- Navbar -->
+        <nav class="navbar bg-white shadow-sm border-b border-gray-200 px-6">
+          <div class="flex-none lg:hidden">
+            <label for="main-drawer" class="btn btn-ghost btn-square">
+              ☰
+            </label>
           </div>
-          <ul tabindex="0" class="menu menu-sm dropdown-content bg-white rounded-xl shadow-lg mt-3 w-40 p-2">
-            <li><a href="{% url 'logout' %}" class="text-error">تسجيل الخروج</a></li>
-          </ul>
-        </div>
+
+          <!-- Logo -->
+          <div class="flex-1 text-lg font-bold">
+            <span
+              class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
+            >
+              مُجدد
+            </span>
+          </div>
+
+          <!-- User -->
+          <div class="flex-none">
+            <div class="dropdown dropdown-end">
+              <div tabindex="0" class="btn btn-ghost">
+                {{ request.user.username }}
+              </div>
+              <ul
+                tabindex="0"
+                class="menu menu-sm dropdown-content bg-white rounded-xl shadow-lg mt-3 w-40 p-2"
+              >
+                <li>
+                  <a href="{% url 'logout' %}" class="text-error"
+                    >تسجيل الخروج</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content" class="p-4 md:p-8 w-full">
+          {% block content %}{% endblock %}
+        </main>
       </div>
 
-    </nav>
+      <!-- Sidebar -->
+      <div class="drawer-side">
+        <aside
+          class="w-72 lg:w-72 min-h-full bg-white border-l border-gray-200 flex flex-col"
+        >
+          <!-- Logo Area -->
+          <div
+            class="px-6 py-5 flex justify-between items-center border-b border-gray-100"
+          >
+            <h1
+              class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
+            >
+              مُجدد
+            </h1>
+          </div>
 
-    <!-- Main Content -->
-    <main id="main-content" class="p-4 md:p-8 w-full">
-        {% block content %}{% endblock %}
-    </main>
-
-  </div>
-
-  <!-- Sidebar -->
-  <div class="drawer-side">
-    
-
-    <aside class="w-72 lg:w-72  min-h-full bg-white border-l border-gray-200 flex flex-col">
-            
-    <!-- Logo Area -->
-    <div class="px-6 py-5 flex justify-between items-center border-b border-gray-100">
-      
-        <h1 class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            مُجدد
-        </h1>
-    </div>
-
-    <!-- Menu -->
-    <div class="flex-1 px-4 py-6 space-y-6 text-sm">
-
-        <!-- Section -->
-        <div>
-            <p class="text-gray-400 text-xs mb-3">الرئيسية</p>
-            <ul class="space-y-1">
-
+          <!-- Menu -->
+          <div class="flex-1 px-4 py-6 space-y-6 text-sm">
+            <!-- Section -->
+            <div>
+              <p class="text-gray-400 text-xs mb-3">الرئيسية</p>
+              <ul class="space-y-1">
                 <li>
-                    <a href="{% url 'dashboard:dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-purple-50 text-purple-600 font-medium">
-                        <i data-lucide="home" class="w-4 h-4"></i>
-                        <span>لوحة التحكم</span>
-                    </a>
+                  <a
+                    href="{% url 'dashboard:dashboard' %}"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg bg-purple-50 text-purple-600 font-medium"
+                  >
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                    <span>لوحة التحكم</span>
+                  </a>
                 </li>
+              </ul>
+            </div>
 
-            </ul>
-        </div>
-
-        <!-- Section -->
-        <div>
-            <p class="text-gray-400 text-xs mb-3">الإدارة</p>
-            <ul class="space-y-1">
-
+            <!-- Section -->
+            <div>
+              <p class="text-gray-400 text-xs mb-3">الإدارة</p>
+              <ul class="space-y-1">
                 <li>
-                    <a href="{% url 'subscriptions:subscriptions' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
-                        <i data-lucide="credit-card" class="w-4 h-4"></i>
-                        <span>الاشتراكات</span>
-                    </a>
+                  <a
+                    href="{% url 'subscriptions:subscriptions' %}"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    <span>الاشتراكات</span>
+                  </a>
                 </li>
 
                 <!-- <li>
@@ -113,66 +161,89 @@
                 </li> -->
 
                 <li>
-                    <a href="{% url 'customers:customers' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
-                        <i data-lucide="users" class="w-4 h-4"></i>
-                        <span>العملاء</span>
-                    </a>
+                  <a
+                    href="{% url 'customers:customers' %}"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>العملاء</span>
+                  </a>
                 </li>
-
-            </ul>
-        </div>
-
-        <!-- Divider -->
-        <div class="border-t border-gray-200 pt-6">
-            <p class="text-gray-400 text-xs mb-3">النظام</p>
-            <ul class="space-y-1">
-
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
-                        <span>⚙️</span>
-                        <span>الإعدادات</span>
-                    </a>
+                  <a
+                    href="{% url 'subscriptions:plans' %}"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <i data-lucide="box" class="w-4 h-4"></i>
+                    <span>الباقات</span>
+                  </a>
                 </li>
+                <li>
+                  <a
+                    href="{% url 'customers:customers' %}"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <i data-lucide="puzzle" class="w-4 h-4"></i>
+                    <span>الإضافات</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-            </ul>
-        </div>
+            <!-- Divider -->
+            <div class="border-t border-gray-200 pt-6">
+              <p class="text-gray-400 text-xs mb-3">النظام</p>
+              <ul class="space-y-1">
+                <li>
+                  <a
+                    href="#"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <span>⚙️</span>
+                    <span>الإعدادات</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
 
+          <!-- User Footer -->
+          <div
+            class="border-t border-gray-200 p-4 flex items-center gap-3 bg-gray-50"
+          >
+            <div
+              class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold"
+            >
+              {% if request.user.image %}
+              <img
+                src="{{ request.user.image.url }}"
+                alt="Profile Image"
+                class="w-10 h-10 rounded-full"
+              />
+              {% else %} {{ request.user.username|first|upper }} {% endif %}
+            </div>
+            <div>
+              <p class="text-sm font-medium">{{ request.user.username }}</p>
+              <p class="text-xs text-gray-400">حساب نشط</p>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
+    <script>
+      lucide.createIcons();
+      document.body.addEventListener("htmx:afterSwap", function () {
+        lucide.createIcons();
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        window.closeModal = function (el) {
+          const modal = el.closest("dialog.modal, .modal");
+          if (!modal) return;
 
-    <!-- User Footer -->
-    <div class="border-t border-gray-200 p-4 flex items-center gap-3 bg-gray-50">
-        <div class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">
-          {% if request.user.image %}
-            <img src="{{ request.user.image.url }}" alt="Profile Image" class="w-10 h-10 rounded-full">
-          {% else %}
-            {{ request.user.username|first|upper }}
-          {% endif %}
-        </div>
-        <div>
-            <p class="text-sm font-medium">{{ request.user.username }}</p>
-            <p class="text-xs text-gray-400">حساب نشط</p>
-        </div>
-    </div>
-
-</aside>
-
-  </div>
-
-</div>
-<script>
-  lucide.createIcons();
-   document.body.addEventListener("htmx:afterSwap", function() {
-    lucide.createIcons();
-  });
-  document.addEventListener("DOMContentLoaded", function () {
-  window.closeModal = function (el) {
-        const modal = el.closest('dialog.modal, .modal');
-        if (!modal) return;
-
-        modal.classList.remove('modal-open');
-        setTimeout(() => modal.remove(), 250);
-      }
-});
-</script>
-</body>
+          modal.classList.remove("modal-open");
+          setTimeout(() => modal.remove(), 250);
+        };
+      });
+    </script>
+  </body>
 </html>

@@ -1,0 +1,77 @@
+<div id="toast-container" hx-swap-oob="beforeend:#toast-container" data-close-modal="{% if close_modal == False %}false{% else %}true{% endif %}">
+    <div class="alert alert-{{ type }} transition-all duration-300 opacity-0" data-toast-alert
+        style="transform: translateX(-150%);">
+        <div class="flex w-full col-span-full justify-between items-center gap-2">
+            <div class="flex items-center gap-2">
+                <p class="icon-info"></p>
+                <span class="text-md font-medium text-black">{{message}}</span>
+            </div>
+            <div>
+                <i class="icon-x cursor-pointer p-sm rounded text-black border-0 bg-slate-200" onclick="(function(el){
+                       const alert = el.closest('[data-toast-alert]');
+                       if (alert) {
+                           alert.style.opacity = '0';
+                           alert.style.transform = 'translateX(-150%)';
+                           setTimeout(() => alert.remove(), 300);
+                       }
+                   })(this)"></i>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function () {
+            // Find the last alert that was just added
+            const container = document.getElementById('toast-container');
+            const alerts = container.querySelectorAll('[data-toast-alert]');
+            const lastAlert = alerts[alerts.length - 1];
+            let timer = null;
+            let isHovered = false;
+
+            function fadeOutAndRemove() {
+                if (lastAlert) {
+                    lastAlert.style.opacity = '0';
+                    lastAlert.style.transform = 'translateX(-150%)';
+                    setTimeout(() => lastAlert.remove(), 300);
+                }
+            }
+
+            if (lastAlert) {
+                // Slide in and fade in
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        lastAlert.style.opacity = '1';
+                        lastAlert.style.transform = 'translateX(0)';
+                    });
+                });
+
+                // Mouse enter/leave to pause/resume removal
+                lastAlert.addEventListener('mouseenter', function () {
+                    isHovered = true;
+                    if (timer) {
+                        clearTimeout(timer);
+                        timer = null;
+                    }
+                });
+
+                lastAlert.addEventListener('mouseleave', function () {
+                    isHovered = false;
+                    if (!timer) {
+                        timer = setTimeout(() => {
+                            fadeOutAndRemove();
+                        }, 2000); // Optionally less time on resume
+                    }
+                });
+
+                // Start fade out after 3 seconds if not hovered
+                timer = setTimeout(function autoRemove() {
+                    if (isHovered) {
+                        // Wait until unhovered
+                        timer = null;
+                    } else {
+                        fadeOutAndRemove();
+                    }
+                }, 3000);
+            }
+        })();
+    </script>
+</div>

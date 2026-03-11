@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from common.toast_utils import toast_response
 from customers.forms import CustomerForm
 from customers.models import Customer
 from django.db.models import Q
@@ -50,5 +51,21 @@ def new_customer(request):
             )
     else:
         form = CustomerForm()
+
+    return render(request, "customers/modal.html", {"form": form})
+
+
+def edit_customer(request, customer_id):
+    customer = Customer.objects.get(id=customer_id, organization=request.user.organization)
+
+    if request.method == "POST":
+        form = CustomerForm(request.POST, instance=customer)
+
+        if form.is_valid():
+            form.save()
+
+            return toast_response("تم تحديث العميل بنجاح", type="success")
+    else:
+        form = CustomerForm(instance=customer)
 
     return render(request, "customers/modal.html", {"form": form})

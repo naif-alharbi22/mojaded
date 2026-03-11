@@ -29,7 +29,6 @@
     </div>  
 </div>
 <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-  {% partialdef content %}
   <table class="table" id="table-customers">
     <!-- head -->
     <thead>
@@ -39,9 +38,13 @@
         <th>البريد الإلكتروني</th>
         <th>رقم الهاتف</th>
         <th>تاريخ الانضمام</th>
+        <th>تعديل</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="table-body" id="tbody" hx-trigger="refresh from:body"
+                    hx-get="{% url 'customers:customers' %}" hx-target="this" hx-swap="innerHTML"
+                    hx-include="#filters">
+      {% partialdef content %}
         {% for customer in customers %}
       <tr>
         <th>{{ customer.id }}</th>
@@ -49,6 +52,14 @@
         <td>{{ customer.email }}</td>
         <td>{{ customer.phone }}</td>
         <td>{{ customer.created_at }}</td>
+        <td>
+                    <button class=""
+                        hx-get="{% url 'customers:edit_customer' customer.id %}"
+                        hx-target="#main-content"
+                        hx-swap="beforeend">
+                        <i data-lucide="edit" class="w-4 h-4"></i>
+                    </button>
+                </td>
       </tr>
       {% empty %}
       <tr>
@@ -56,9 +67,9 @@
       </tr>
       {% endfor %}
       
+      {% endpartialdef %}{% partial content %}
     </tbody>
   </table>
-  {% endpartialdef %}{% partial content %}
 </div>
 
 {% endblock %}

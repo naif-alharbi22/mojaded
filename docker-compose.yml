@@ -1,0 +1,40 @@
+services:
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: mojaded
+      POSTGRES_USER: mojaded
+      POSTGRES_PASSWORD: mojaded
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DB_NAME: mojaded
+      DB_USER: mojaded
+      DB_PASSWORD: mojaded
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      - db
+
+  tailwind:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:

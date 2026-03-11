@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from django.http import HttpResponse
 
+from common.toast_utils import toast_response
 from customers.models import Customer
 from subscriptions.forms import NewSubscriptionForm
 from subscriptions.models import Plan, Subscription
@@ -39,6 +40,18 @@ def subscriptions(request):
         return render(request, "subscription/index.html#content", context)
 
     return render(request, "subscription/index.html", context)
+
+def plans_view(request):
+    plans = Plan.objects.filter(organization=request.user.organization)
+
+    context = {
+        "plans": plans,
+    }
+
+    if request.headers.get("HX-Request"):
+        return render(request, "plans/index.html#content", context)
+
+    return render(request, "plans/index.html", context)
 
 def new_subscriptions(request):
     if request.method == "POST":
@@ -88,12 +101,7 @@ def edit_subscription(request, subscription_id):
         try:
             if form.is_valid():
                 form.save()
-                print("POST DATA:", request.POST)
-                print("FORM ERRORS:", form.errors)
-                print("IS VALID:", form.is_valid())
-                return HttpResponse(
-                    "<script>window.dispatchEvent(new Event('subscriptionUpdated'));</script>"
-                )
+                return toast_response("تم تحديث الاشتراك بنجاح", type="success")
         except Exception as e:
             form.add_error(None, str(e))
             print("Error updating subscription:", e)
