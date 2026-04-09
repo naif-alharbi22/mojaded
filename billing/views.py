@@ -9,9 +9,9 @@ from subscriptions.models import Subscription
 
 
 def billing_view(request):
-    invoices = Invoice.objects.filter(
-        organization=request.user.organization
-    ).select_related("subscription", "subscription__customer")
+    invoices = Invoice.objects.for_org(request.organization).select_related(
+        "subscription", "subscription__customer"
+    )
 
     search_query = request.GET.get("search", "")
     if search_query:
@@ -32,24 +32,24 @@ def billing_view(request):
 
 
 def new_invoice(request):
+    org = request.organization
+
     if request.method == "POST":
-        form = InvoiceForm(request.POST)
+        form = InvoiceForm(request.POST, organization=org)
         if form.is_valid():
             invoice = form.save(commit=False)
-            invoice.organization = request.user.organization
+            invoice.organization = org
             invoice.save()
             return toast_response("تم إنشاء الفاتورة بنجاح", type="success")
     else:
-        form = InvoiceForm(initial={
+        form = InvoiceForm(organization=org, initial={
             "issue_date": timezone.localdate(),
             "due_date": timezone.localdate(),
             "status": "pending",
             "invoice_type": "subscription",
         })
 
-    subscriptions = Subscription.objects.filter(
-        organization=request.user.organization
-    ).select_related("customer", "plan")
+    subscriptions = Subscription.objects.for_org(org).select_related("customer", "plan")
 
     return render(request, "billing/modal.html", {
         "form": form,
@@ -59,19 +59,18 @@ def new_invoice(request):
 
 
 def edit_invoice(request, invoice_id):
-    invoice = Invoice.objects.get(id=invoice_id, organization=request.user.organization)
+    org = request.organization
+    invoice = Invoice.objects.for_org(org).get(id=invoice_id)
 
     if request.method == "POST":
-        form = InvoiceForm(request.POST, instance=invoice)
+        form = InvoiceForm(request.POST, instance=invoice, organization=org)
         if form.is_valid():
             form.save()
             return toast_response("تم تحديث الفاتورة بنجاح", type="success")
     else:
-        form = InvoiceForm(instance=invoice)
+        form = InvoiceForm(instance=invoice, organization=org)
 
-    subscriptions = Subscription.objects.filter(
-        organization=request.user.organization
-    ).select_related("customer", "plan")
+    subscriptions = Subscription.objects.for_org(org).select_related("customer", "plan")
 
     return render(request, "billing/modal.html", {
         "form": form,

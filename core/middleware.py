@@ -5,6 +5,18 @@ from django.utils import timezone
 
 
 
+class TenantMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.user.is_authenticated:
+            request.organization = getattr(request.user, "organization", None)
+        else:
+            request.organization = None
+        return self.get_response(request)
+
+
 class OrganizationAccessMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -41,7 +53,7 @@ class PlatformAccessMiddleware:
         ):
             return self.get_response(request)
 
-        public_paths = {reverse("landing"), reverse("login"), reverse("account_inactive")}
+        public_paths = {reverse("landing"), reverse("login"), reverse("register"), reverse("account_inactive")}
 
         is_app_area = path not in public_paths
 

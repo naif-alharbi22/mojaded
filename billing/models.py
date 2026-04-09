@@ -1,10 +1,12 @@
 from django.db import models
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
+from common.managers import TenantManager
 
 
 
 class Invoice(models.Model):
+    objects = TenantManager()
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("paid", "Paid"),
