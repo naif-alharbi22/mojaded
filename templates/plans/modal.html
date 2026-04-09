@@ -1,0 +1,98 @@
+<dialog id="modal" class="modal modal-open">
+
+<form
+    method="post"
+    hx-post="{% if plan %}{% url 'subscriptions:edit_plan' plan.id %}{% else %}{% url 'subscriptions:new_plan' %}{% endif %}"
+    hx-target="#modal"
+    hx-swap="innerHTML"
+    class="modal-box max-w-2xl p-0 overflow-hidden rounded-2xl">
+
+    {% csrf_token %}
+
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white">
+        <h3 class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            {% if plan %}تعديل الباقة{% else %}إضافة باقة جديدة{% endif %}
+        </h3>
+
+        <button type="button" onclick="closeModal(this)">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 space-y-5 bg-gray-50">
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-error text-sm">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <!-- Name -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">اسم الباقة</span>
+            </label>
+            <input type="text" name="name"
+                   value="{{ form.name.value|default:'' }}"
+                   class="input input-bordered w-full focus:border-purple-500"
+                   required>
+            {% if form.name.errors %}
+                <span class="text-red-500 text-sm mt-1">{{ form.name.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+        <!-- Amount -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">السعر</span>
+            </label>
+            <input type="number" step="0.01" name="amount"
+                   value="{{ form.amount.value|default:'' }}"
+                   class="input input-bordered w-full focus:border-purple-500"
+                   required>
+            {% if form.amount.errors %}
+                <span class="text-red-500 text-sm mt-1">{{ form.amount.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+        <!-- Billing Cycle -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">دورة الفوترة</span>
+            </label>
+            <select name="billing_cycle" class="select select-bordered w-full">
+                <option value="monthly" {% if form.billing_cycle.value == "monthly" %}selected{% endif %}>شهري</option>
+                <option value="yearly" {% if form.billing_cycle.value == "yearly" %}selected{% endif %}>سنوي</option>
+            </select>
+            {% if form.billing_cycle.errors %}
+                <span class="text-red-500 text-sm mt-1">{{ form.billing_cycle.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+        <!-- Description -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">الوصف</span>
+            </label>
+            <textarea name="description" rows="3"
+                      class="textarea textarea-bordered w-full focus:border-purple-500">{{ form.description.value|default:'' }}</textarea>
+            {% if form.description.errors %}
+                <span class="text-red-500 text-sm mt-1">{{ form.description.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 border-t border-gray-200 bg-white flex justify-end gap-3">
+        <button type="submit"
+            class="btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-none hover:opacity-90">
+            {% if plan %}تحديث{% else %}إنشاء{% endif %}
+        </button>
+    </div>
+
+</form>
+
+</dialog>

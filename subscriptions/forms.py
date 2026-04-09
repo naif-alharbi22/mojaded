@@ -1,5 +1,5 @@
 from django import forms
-from .models import Subscription
+from .models import Plan, Subscription
 
 
 
@@ -21,4 +21,13 @@ class NewSubscriptionForm(forms.ModelForm):
             "start_date": forms.DateInput(attrs={"type": "date"}),
             "note": forms.Textarea(attrs={"rows": 3}),
             "subscription_type": forms.RadioSelect,
+        }
+
+
+class PlanForm(forms.ModelForm):
+    class Meta:
+        model = Plan
+        fields = ["name", "description", "amount", "billing_cycle"]
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 3}),
         }

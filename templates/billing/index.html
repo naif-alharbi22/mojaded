@@ -1,74 +1,98 @@
 {% extends "base.html" %}
+{% load partials %}
 
-{% block title %}لوحة التحكم{% endblock %}
+{% block title %}الفواتير{% endblock %}
 
 {% block content %}
-<div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4 ">
+<div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
     <h1 class="text-2xl font-bold">الفواتير</h1>
     <div class="flex items-center gap-2">
-        <input type="search" placeholder="search" class="input page-search-input w-64" name="search"
-            hx-get="#"
-            hx-trigger="input changed delay:500ms, keyup[key=='Enter'], submit" 
-            hx-target="#table-voucher" hx-select="#table-voucher" hx-swap="outerHTML" value="{{ search }}" />
-    <button class="btn btn-soft btn-primary" hx-get="{% url 'billing:new_invoices' %}" hx-target="#main-content" hx-swap="beforeend">
-        <i data-lucide="plus" class="w-4 h-4"></i>
-        إضافة فاتورة جديدة
-    </button>
-    </div>  
-</div>
-<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-  <table class="table">
-    <!-- head -->
-    <thead>
-      <tr>
-        <th>رقم الفاتورة</th>
-        <th>المشترك</th>
-        <th>رقم الأشتراك</th>
-        <th>تاريخ الفاتورة</th>
-        <th>الإجمالي (شامل الضريبة)</th>
-        <th>الإجمالي (غير شامل الضريبة)</th>
-        <th>ضريبة القيمة المضافة</th>
-        <th>معاينة</th>
-        
 
-      </tr>
-    </thead>
-    <tbody>
-      <!-- row 1 -->
-      <tr>
-        <th>1</th>
-        <td>Cy Ganderton</td>
-        <td>12</td>
-        <td>2024-07-01</td>
-        <td>$45</td>
-        <td>$545</td>
-        <td>$43</td>
-        <td><i data-lucide="eye" class="w-4 h-4"></i></td>
-      </tr>
-      <!-- row 2 -->
-      <tr>
-        <th>2</th>
-        <td>Hart Hagerty</td>
-        <td>12</td>
-        <td>2024-07-01</td>
-        <td>$45</td>
-        <td>$545</td>
-        <td>$43</td>
-        <td><i data-lucide="eye" class="w-4 h-4"></i></td>
-      </tr>
-      <!-- row 3 -->
-      <tr>
-        <th>3</th>
-        <td>Brice Swyre</td>
-        <td>12</td>
-        <td>2024-07-01</td>
-        <td>$45</td>
-        <td>$545</td>
-        <td>$43</td>
-        <td><i data-lucide="eye" class="w-4 h-4"></i></td>
-      </tr>
-    </tbody>
-  </table>
+        <form
+            method="get"
+            hx-get="{% url 'billing:billing' %}"
+            hx-trigger="input changed delay:500ms from:input[name='search'], keyup[key=='Enter']"
+            hx-target="#table-invoices"
+            hx-select="#table-invoices"
+            hx-swap="outerHTML"
+            class="flex items-center gap-2">
+
+            <input type="search"
+                placeholder="بحث..."
+                class="input page-search-input w-64"
+                name="search"
+                value="{{ search }}" />
+        </form>
+
+        <button class="btn btn-soft btn-primary"
+            hx-get="{% url 'billing:new_invoices' %}"
+            hx-target="#main-content"
+            hx-swap="beforeend">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            إضافة فاتورة جديدة
+        </button>
+    </div>
+</div>
+
+<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+    <table class="table" id="table-invoices">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>المشترك</th>
+                <th>النوع</th>
+                <th>المبلغ</th>
+                <th>تاريخ الإصدار</th>
+                <th>تاريخ الاستحقاق</th>
+                <th>الحالة</th>
+                <th>الخيارات</th>
+            </tr>
+        </thead>
+
+        <tbody class="table-body" id="tbody" hx-trigger="refresh from:body"
+                    hx-get="{% url 'billing:billing' %}" hx-target="this" hx-swap="innerHTML"
+                    hx-include="#filters">
+            {% partialdef content %}
+            {% for invoice in invoices %}
+            <tr>
+                <th>{{ invoice.id }}</th>
+                <td>{% if invoice.subscription %}{{ invoice.subscription.customer.name }}{% else %}-{% endif %}</td>
+                <td>
+                    {% if invoice.invoice_type == "subscription" %}اشتراك
+                    {% elif invoice.invoice_type == "manual" %}يدوية
+                    {% else %}تعديل{% endif %}
+                </td>
+                <td>{{ invoice.amount }}</td>
+                <td>{{ invoice.issue_date }}</td>
+                <td>{{ invoice.due_date }}</td>
+                <td>
+                    {% if invoice.status == "pending" %}
+                        <span class="badge badge-warning badge-sm">بانتظار الدفع</span>
+                    {% elif invoice.status == "paid" %}
+                        <span class="badge badge-success badge-sm">مدفوعة</span>
+                    {% elif invoice.status == "overdue" %}
+                        <span class="badge badge-error badge-sm">متأخرة</span>
+                    {% else %}
+                        <span class="badge badge-ghost badge-sm">ملغاة</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <button
+                        hx-get="{% url 'billing:edit_invoice' invoice.id %}"
+                        hx-target="#main-content"
+                        hx-swap="beforeend">
+                        <i data-lucide="edit" class="w-4 h-4"></i>
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center py-4">لا توجد فواتير بعد.</td>
+            </tr>
+            {% endfor %}
+            {% endpartialdef %}{% partial content %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}

@@ -1,0 +1,1068 @@
+[
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "accounts",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "organizations",
+    "model": "organization"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "customers",
+    "model": "customer"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "subscriptions",
+    "model": "addon"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "subscriptions",
+    "model": "plan"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "subscriptions",
+    "model": "subscription"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "subscriptions",
+    "model": "subscriptionaddon"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "billing",
+    "model": "invoice"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "amwxyhcu0mfj5msmcpzc9acmd9dkjlmy",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGln-fyjpOYO163VwANlSnFSIu0OkFNC-mXkvlmBba9pGWdJM7MwkO_1uCPlR2g7oDu3Wee5tXWbku8IPOvi1U3leDvfvoMKo3xq8V9L6qPxkSAowUwRXgi42o9PBagR0JpLT0pB2xQQIQkkhAa0AR-z9AcloNzc:1vval8:wPrdS8gi88DazScKGqHATrhpr6K4CI_kgGEv_0F7V7A",
+    "expire_date": "2026-03-12T12:46:26.442Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "g5i07hj4fgv19maooefnwf4jncqy9adg",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGln-fyjpOYO163VwANlSnFSIu0OkFNC-mXkvlmBba9pGWdJM7MwkO_1uCPlR2g7oDu3Wee5tXWbku8IPOvi1U3leDvfvoMKo3xq8V9L6qPxkSAowUwRXgi42o9PBagR0JpLT0pB2xQQIQkkhAa0AR-z9AcloNzc:1w6dRY:aoM5Fyp9uW7oygGispCjigYyIsIoR0g0OGqe3dBG90s",
+    "expire_date": "2026-04-11T23:51:52.245Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "k6f97kf0t6ckw6392f2klb1mgi3jpgsy",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGln-fyjpOYO163VwANlSnFSIu0OkFNC-mXkvlmBba9pGWdJM7MwkO_1uCPlR2g7oDu3Wee5tXWbku8IPOvi1U3leDvfvoMKo3xq8V9L6qPxkSAowUwRXgi42o9PBagR0JpLT0pB2xQQIQkkhAa0AR-z9AcloNzc:1w00WM:0jeck__1NL_Y1pkOHsIUEGsww_fVgrev8c301dwEvEc",
+    "expire_date": "2026-03-24T17:05:26.204Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "yuh9gk0qchyrtb5mnmmqppn2xgc4afq8",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGln-fyjpOYO163VwANlSnFSIu0OkFNC-mXkvlmBba9pGWdJM7MwkO_1uCPlR2g7oDu3Wee5tXWbku8IPOvi1U3leDvfvoMKo3xq8V9L6qPxkSAowUwRXgi42o9PBagR0JpLT0pB2xQQIQkkhAa0AR-z9AcloNzc:1wAqkZ:Dg-8l5RXK_OFRs-r_y0NJnKWsB0G8Jsj4XawQhpr8ew",
+    "expire_date": "2026-04-23T14:52:55.229Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "z550g1lvoiiarll994bscat42nx0yogw",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGln-fyjpOYO163VwANlSnFSIu0OkFNC-mXkvlmBba9pGWdJM7MwkO_1uCPlR2g7oDu3Wee5tXWbku8IPOvi1U3leDvfvoMKo3xq8V9L6qPxkSAowUwRXgi42o9PBagR0JpLT0pB2xQQIQkkhAa0AR-z9AcloNzc:1wABfD:6cEXnIEzX_jjt8GeLvhQQDrBvA08MUV_aduWTp4XveM",
+    "expire_date": "2026-04-21T19:00:39.958Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 1,
+  "fields": {
+    "organization": 1,
+    "name": "naif",
+    "email": "naif.n1158@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-02-21T22:38:09.170Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 2,
+  "fields": {
+    "organization": 1,
+    "name": "anif",
+    "email": "naif.n1158@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-02-21T23:02:52.333Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 3,
+  "fields": {
+    "organization": 1,
+    "name": "محمد",
+    "email": "naif.n1158@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-02-22T11:55:18.658Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 4,
+  "fields": {
+    "organization": 1,
+    "name": "ناتنم",
+    "email": "naif.n1158@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-02-22T12:10:03.652Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 5,
+  "fields": {
+    "organization": 1,
+    "name": "fdfd",
+    "email": "naif.n1158@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-02-22T12:31:13.927Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 6,
+  "fields": {
+    "organization": 1,
+    "name": "نايف الحربي",
+    "email": "naif.n1158@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-02-26T14:11:11.740Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 7,
+  "fields": {
+    "organization": 1,
+    "name": "dfgdgfg",
+    "email": "naif.n1158@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-02-26T14:38:29.750Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 8,
+  "fields": {
+    "organization": 1,
+    "name": "dsfgfdg",
+    "email": "naif.n1158@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-02-26T14:38:36.538Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 9,
+  "fields": {
+    "organization": 1,
+    "name": "naifsdfsdfdsf",
+    "email": "naif.n1158@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-02-26T14:40:29.269Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 10,
+  "fields": {
+    "organization": 1,
+    "name": "dfdsfddfgdgffdgdfgdfgdfgfdgdfg",
+    "email": "naif.n1158@gmail.com",
+    "phone": "654565456",
+    "created_at": "2026-04-07T19:01:49.922Z"
+  }
+},
+{
+  "model": "customers.customer",
+  "pk": 11,
+  "fields": {
+    "organization": 1,
+    "name": "يسيبب",
+    "email": "naif@gmail.com",
+    "phone": "0545821287",
+    "created_at": "2026-04-09T15:11:20.850Z"
+  }
+},
+{
+  "model": "subscriptions.plan",
+  "pk": 1,
+  "fields": {
+    "organization": 1,
+    "name": "naa",
+    "description": null,
+    "amount": "100.00",
+    "billing_cycle": "monthly",
+    "created_at": "2026-02-21T22:38:40.201Z"
+  }
+},
+{
+  "model": "subscriptions.subscription",
+  "pk": 1,
+  "fields": {
+    "organization": 1,
+    "customer": 1,
+    "subscription_type": "monthly",
+    "plan": 1,
+    "amount": "2334.00",
+    "updated_at": "2026-02-26T14:27:41.698Z",
+    "start_date": "2026-02-12",
+    "next_billing_date": "2026-03-12",
+    "status": "pending",
+    "duration_months": 1,
+    "created_at": "2026-02-21T22:49:46.835Z",
+    "note": ""
+  }
+},
+{
+  "model": "subscriptions.subscription",
+  "pk": 2,
+  "fields": {
+    "organization": 1,
+    "customer": 1,
+    "subscription_type": "yearly",
+    "plan": 1,
+    "amount": "345435.00",
+    "updated_at": "2026-02-26T14:28:22.796Z",
+    "start_date": "2026-02-13",
+    "next_billing_date": "2029-02-13",
+    "status": "active",
+    "duration_months": 3,
+    "created_at": "2026-02-21T22:53:00.997Z",
+    "note": ""
+  }
+},
+{
+  "model": "subscriptions.subscription",
+  "pk": 3,
+  "fields": {
+    "organization": 1,
+    "customer": 3,
+    "subscription_type": "yearly",
+    "plan": 1,
+    "amount": "11.00",
+    "updated_at": "2026-02-26T14:36:23.233Z",
+    "start_date": "2026-02-04",
+    "next_billing_date": "2032-02-04",
+    "status": "past_due",
+    "duration_months": 6,
+    "created_at": "2026-02-22T13:37:58.557Z",
+    "note": ""
+  }
+},
+{
+  "model": "subscriptions.subscription",
+  "pk": 4,
+  "fields": {
+    "organization": 1,
+    "customer": 1,
+    "subscription_type": "yearly",
+    "plan": 1,
+    "amount": "666.00",
+    "updated_at": "2026-02-22T13:43:53.093Z",
+    "start_date": "2026-02-12",
+    "next_billing_date": "2033-02-12",
+    "status": "past_due",
+    "duration_months": 7,
+    "created_at": "2026-02-22T13:39:08.914Z",
+    "note": ""
+  }
+},
+{
+  "model": "subscriptions.subscription",
+  "pk": 5,
+  "fields": {
+    "organization": 1,
+    "customer": 3,
+    "subscription_type": "monthly",
+    "plan": 1,
+    "amount": "222.00",
+    "updated_at": "2026-02-26T14:36:16.069Z",
+    "start_date": "2026-02-26",
+    "next_billing_date": "2026-05-26",
+    "status": "past_due",
+    "duration_months": 3,
+    "created_at": "2026-02-26T14:13:12.191Z",
+    "note": ""
+  }
+},
+{
+  "model": "subscriptions.subscription",
+  "pk": 6,
+  "fields": {
+    "organization": 1,
+    "customer": 4,
+    "subscription_type": "yearly",
+    "plan": 1,
+    "amount": "5465.00",
+    "updated_at": "2026-04-07T19:01:17.394Z",
+    "start_date": "2026-04-07",
+    "next_billing_date": "2030-04-07",
+    "status": "active",
+    "duration_months": 4,
+    "created_at": "2026-04-07T19:01:17.394Z",
+    "note": "fhghfh"
+  }
+},
+{
+  "model": "subscriptions.subscription",
+  "pk": 7,
+  "fields": {
+    "organization": 1,
+    "customer": 2,
+    "subscription_type": "monthly",
+    "plan": 1,
+    "amount": "3424.00",
+    "updated_at": "2026-04-09T15:10:56.149Z",
+    "start_date": "2026-04-09",
+    "next_billing_date": "2026-05-09",
+    "status": "past_due",
+    "duration_months": 1,
+    "created_at": "2026-04-09T15:10:56.149Z",
+    "note": "يبسي"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": [
+      "admin",
+      "logentry"
+    ],
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view permission",
+    "content_type": [
+      "auth",
+      "permission"
+    ],
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view group",
+    "content_type": [
+      "auth",
+      "group"
+    ],
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view content type",
+    "content_type": [
+      "contenttypes",
+      "contenttype"
+    ],
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view session",
+    "content_type": [
+      "sessions",
+      "session"
+    ],
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add user",
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change user",
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete user",
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view user",
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add organization",
+    "content_type": [
+      "organizations",
+      "organization"
+    ],
+    "codename": "add_organization"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change organization",
+    "content_type": [
+      "organizations",
+      "organization"
+    ],
+    "codename": "change_organization"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete organization",
+    "content_type": [
+      "organizations",
+      "organization"
+    ],
+    "codename": "delete_organization"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view organization",
+    "content_type": [
+      "organizations",
+      "organization"
+    ],
+    "codename": "view_organization"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add customer",
+    "content_type": [
+      "customers",
+      "customer"
+    ],
+    "codename": "add_customer"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change customer",
+    "content_type": [
+      "customers",
+      "customer"
+    ],
+    "codename": "change_customer"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete customer",
+    "content_type": [
+      "customers",
+      "customer"
+    ],
+    "codename": "delete_customer"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view customer",
+    "content_type": [
+      "customers",
+      "customer"
+    ],
+    "codename": "view_customer"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add add on",
+    "content_type": [
+      "subscriptions",
+      "addon"
+    ],
+    "codename": "add_addon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change add on",
+    "content_type": [
+      "subscriptions",
+      "addon"
+    ],
+    "codename": "change_addon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete add on",
+    "content_type": [
+      "subscriptions",
+      "addon"
+    ],
+    "codename": "delete_addon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view add on",
+    "content_type": [
+      "subscriptions",
+      "addon"
+    ],
+    "codename": "view_addon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add plan",
+    "content_type": [
+      "subscriptions",
+      "plan"
+    ],
+    "codename": "add_plan"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change plan",
+    "content_type": [
+      "subscriptions",
+      "plan"
+    ],
+    "codename": "change_plan"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete plan",
+    "content_type": [
+      "subscriptions",
+      "plan"
+    ],
+    "codename": "delete_plan"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view plan",
+    "content_type": [
+      "subscriptions",
+      "plan"
+    ],
+    "codename": "view_plan"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add subscription",
+    "content_type": [
+      "subscriptions",
+      "subscription"
+    ],
+    "codename": "add_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change subscription",
+    "content_type": [
+      "subscriptions",
+      "subscription"
+    ],
+    "codename": "change_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete subscription",
+    "content_type": [
+      "subscriptions",
+      "subscription"
+    ],
+    "codename": "delete_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view subscription",
+    "content_type": [
+      "subscriptions",
+      "subscription"
+    ],
+    "codename": "view_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add subscription add on",
+    "content_type": [
+      "subscriptions",
+      "subscriptionaddon"
+    ],
+    "codename": "add_subscriptionaddon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change subscription add on",
+    "content_type": [
+      "subscriptions",
+      "subscriptionaddon"
+    ],
+    "codename": "change_subscriptionaddon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete subscription add on",
+    "content_type": [
+      "subscriptions",
+      "subscriptionaddon"
+    ],
+    "codename": "delete_subscriptionaddon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view subscription add on",
+    "content_type": [
+      "subscriptions",
+      "subscriptionaddon"
+    ],
+    "codename": "view_subscriptionaddon"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can add invoice",
+    "content_type": [
+      "billing",
+      "invoice"
+    ],
+    "codename": "add_invoice"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can change invoice",
+    "content_type": [
+      "billing",
+      "invoice"
+    ],
+    "codename": "change_invoice"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can delete invoice",
+    "content_type": [
+      "billing",
+      "invoice"
+    ],
+    "codename": "delete_invoice"
+  }
+},
+{
+  "model": "auth.permission",
+  "fields": {
+    "name": "Can view invoice",
+    "content_type": [
+      "billing",
+      "invoice"
+    ],
+    "codename": "view_invoice"
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$mpBwE2UrosiePXYXawCFYg$Krqx4vyy1Qbr61Wraeym7O8ArZHpELJb1Kgw+wvK7WA=",
+    "last_login": "2026-04-09T14:52:55.227Z",
+    "is_superuser": true,
+    "username": "naif",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-02-21T22:32:16Z",
+    "image": "",
+    "organization": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "organizations.organization",
+  "pk": 1,
+  "fields": {
+    "name": "JARAS",
+    "slug": "jaras",
+    "owner": [
+      "naif"
+    ],
+    "status": "active",
+    "created_at": "2026-02-21T22:36:42.315Z"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-02-21T22:36:42.316Z",
+    "user": [
+      "naif"
+    ],
+    "content_type": [
+      "organizations",
+      "organization"
+    ],
+    "object_id": "1",
+    "object_repr": "JARAS",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-02-21T22:37:24.397Z",
+    "user": [
+      "naif"
+    ],
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "object_id": "1",
+    "object_repr": "naif",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Organization\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2026-02-21T22:38:09.171Z",
+    "user": [
+      "naif"
+    ],
+    "content_type": [
+      "customers",
+      "customer"
+    ],
+    "object_id": "1",
+    "object_repr": "naif",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2026-02-21T22:38:40.202Z",
+    "user": [
+      "naif"
+    ],
+    "content_type": [
+      "subscriptions",
+      "plan"
+    ],
+    "object_id": "1",
+    "object_repr": "naa",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+}
+]

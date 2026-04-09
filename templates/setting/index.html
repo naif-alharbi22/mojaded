@@ -1,64 +1,101 @@
 {% extends "base.html" %}
-{% load partials %}
-{% block title %}لوحة التحكم{% endblock %}
+
+{% block title %}الإعدادات{% endblock %}
 
 {% block content %}
-<div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4 ">
-    <h1 class="text-2xl font-bold">العملاء</h1>
-    <div class="flex items-center gap-2">
-     <form 
-    method="get"
-    hx-get="{% url 'customers:customers' %}"
-    hx-trigger="input changed delay:500ms from:input[name='search'], keyup[key=='Enter']"
-    hx-target="#table-customers"
-    hx-select="#table-customers"
-    hx-swap="outerHTML"
-    class="flex items-center gap-2">
-
-    <input type="search"
-        placeholder="search"
-        class="input page-search-input w-64"
-        name="search"
-        value="{{ search }}" />
-
-</form>
-    <button class="btn btn-soft btn-primary" hx-get="{% url 'customers:new_customer' %}" hx-target="#main-content" hx-swap="beforeend">
-        <i data-lucide="plus" class="w-4 h-4"></i>
-        إضافة عميل جديد
-    </button>
-    </div>  
+<div class="mb-6">
+    <h1 class="text-2xl font-bold">الإعدادات</h1>
 </div>
-<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-  {% partialdef content %}
-  <table class="table" id="table-customers">
-    <!-- head -->
-    <thead>
-      <tr>
-        <th>رقم العميل</th>
-        <th>الاسم</th>
-        <th>البريد الإلكتروني</th>
-        <th>رقم الهاتف</th>
-        <th>تاريخ الانضمام</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for customer in customers %}
-      <tr>
-        <th>{{ customer.id }}</th>
-        <td>{{ customer.name }}</td>
-        <td>{{ customer.email }}</td>
-        <td>{{ customer.phone }}</td>
-        <td>{{ customer.created_at }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="5" class="text-center py-4">لا يوجد عملاء بعد.</td>
-      </tr>
-      {% endfor %}
-      
-    </tbody>
-  </table>
-  {% endpartialdef %}{% partial content %}
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <!-- Organization Settings -->
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">بيانات المنشأة</h2>
+
+        <form method="post"
+              hx-post="{% url 'setting:view_settings' %}"
+              hx-swap="none"
+              class="space-y-4">
+            {% csrf_token %}
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">اسم المنشأة</span>
+                </label>
+                <input type="text" name="name"
+                       value="{{ form.name.value|default:'' }}"
+                       class="input input-bordered w-full focus:border-purple-500"
+                       required>
+                {% if form.name.errors %}
+                    <span class="text-red-500 text-sm mt-1">{{ form.name.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">حالة الحساب</span>
+                </label>
+                <input type="text"
+                       value="{% if organization.status == 'active' %}نشط{% elif organization.status == 'trial' %}تجريبي{% else %}موقوف{% endif %}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">تاريخ الإنشاء</span>
+                </label>
+                <input type="text"
+                       value="{{ organization.created_at|date:'Y-m-d' }}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+
+            <button type="submit"
+                class="btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-none hover:opacity-90">
+                حفظ التغييرات
+            </button>
+        </form>
+    </div>
+
+    <!-- Account Info -->
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">معلومات الحساب</h2>
+
+        <div class="space-y-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">اسم المستخدم</span>
+                </label>
+                <input type="text"
+                       value="{{ request.user.username }}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">البريد الإلكتروني</span>
+                </label>
+                <input type="text"
+                       value="{{ request.user.email|default:'-' }}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">المالك</span>
+                </label>
+                <input type="text"
+                       value="{{ organization.owner.username }}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}

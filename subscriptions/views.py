@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 from common.toast_utils import toast_response
 from customers.models import Customer
-from subscriptions.forms import NewSubscriptionForm
+from subscriptions.forms import NewSubscriptionForm, PlanForm
 from subscriptions.models import Plan, Subscription
 
 def paywall(request):
@@ -44,8 +44,13 @@ def subscriptions(request):
 def plans_view(request):
     plans = Plan.objects.filter(organization=request.user.organization)
 
+    search_query = request.GET.get("search", "")
+    if search_query:
+        plans = plans.filter(name__icontains=search_query)
+
     context = {
         "plans": plans,
+        "search": search_query,
     }
 
     if request.headers.get("HX-Request"):
@@ -91,6 +96,34 @@ def new_subscriptions(request):
     }
 
     return render(request, "subscription/modal.html", context)
+
+
+def new_plan(request):
+    if request.method == "POST":
+        form = PlanForm(request.POST)
+        if form.is_valid():
+            plan = form.save(commit=False)
+            plan.organization = request.user.organization
+            plan.save()
+            return toast_response("تم إضافة الباقة بنجاح", type="success")
+    else:
+        form = PlanForm()
+
+    return render(request, "plans/modal.html", {"form": form})
+
+
+def edit_plan(request, plan_id):
+    plan = Plan.objects.get(id=plan_id, organization=request.user.organization)
+
+    if request.method == "POST":
+        form = PlanForm(request.POST, instance=plan)
+        if form.is_valid():
+            form.save()
+            return toast_response("تم تحديث الباقة بنجاح", type="success")
+    else:
+        form = PlanForm(instance=plan)
+
+    return render(request, "plans/modal.html", {"form": form, "plan": plan})
 
 
 def edit_subscription(request, subscription_id):

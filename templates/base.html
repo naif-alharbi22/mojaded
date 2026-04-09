@@ -57,17 +57,152 @@
     hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
     class="min-h-screen bg-gray-50"
   >
-    <div class="drawer lg:drawer-open w-full">
-      <input id="main-drawer" type="checkbox" class="drawer-toggle" />
 
-      <!-- Content -->
-      <div class="drawer-content flex flex-col w-full">
+    <!-- Mobile overlay -->
+    <div
+      id="sidebar-overlay"
+      class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"
+      onclick="closeSidebar()"
+    ></div>
+
+    <div class="flex min-h-screen">
+
+      <!-- Sidebar: first in DOM = right side in RTL flex -->
+      <aside
+        id="sidebar"
+        class="fixed inset-y-0 start-0 z-50 w-72 bg-white border-e border-gray-200 flex flex-col
+               translate-x-full transition-transform duration-300
+               lg:sticky lg:top-0 lg:h-screen lg:translate-x-0"
+      >
+        <!-- Logo Area -->
+        <div
+          class="px-6 py-5 flex justify-between items-center border-b border-gray-100"
+        >
+          <h1
+            class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
+          >
+            مُجدد
+          </h1>
+        </div>
+
+        <!-- Menu -->
+        <div class="flex-1 px-4 py-6 space-y-6 text-sm overflow-y-auto">
+          <!-- Section -->
+          <div>
+            <p class="text-gray-400 text-xs mb-3">الرئيسية</p>
+            <ul class="space-y-1">
+              <li>
+                <a
+                  href="{% url 'dashboard:dashboard' %}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg bg-purple-50 text-purple-600 font-medium"
+                >
+                  <i data-lucide="home" class="w-4 h-4"></i>
+                  <span>لوحة التحكم</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Section -->
+          <div>
+            <p class="text-gray-400 text-xs mb-3">الإدارة</p>
+            <ul class="space-y-1">
+              <li>
+                <a
+                  href="{% url 'subscriptions:subscriptions' %}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  <i data-lucide="credit-card" class="w-4 h-4"></i>
+                  <span>الاشتراكات</span>
+                </a>
+              </li>
+
+              <!-- <li>
+                  <a href="{% url 'billing:billing' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                      <i data-lucide="file-text" class="w-4 h-4"></i>
+                      <span>الفواتير</span>
+                  </a>
+              </li> -->
+
+              <li>
+                <a
+                  href="{% url 'customers:customers' %}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  <i data-lucide="users" class="w-4 h-4"></i>
+                  <span>العملاء</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="{% url 'subscriptions:plans' %}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  <i data-lucide="box" class="w-4 h-4"></i>
+                  <span>الباقات</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="{% url 'customers:customers' %}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  <i data-lucide="puzzle" class="w-4 h-4"></i>
+                  <span>الإضافات</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Divider -->
+          <div class="border-t border-gray-200 pt-6">
+            <p class="text-gray-400 text-xs mb-3">النظام</p>
+            <ul class="space-y-1">
+              <li>
+                <a
+                  href="{% url 'setting:view_settings' %}"
+                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  <i data-lucide="settings" class="w-4 h-4"></i>
+                  <span>الإعدادات</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- User Footer -->
+        <div
+          class="border-t border-gray-200 p-4 flex items-center gap-3 bg-gray-50"
+        >
+          <div
+            class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold"
+          >
+            {% if request.user.image %}
+            <img
+              src="{{ request.user.image.url }}"
+              alt="Profile Image"
+              class="w-10 h-10 rounded-full"
+            />
+            {% else %} {{ request.user.username|first|upper }} {% endif %}
+          </div>
+          <div>
+            <p class="text-sm font-medium">{{ request.user.username }}</p>
+            <p class="text-xs text-gray-400">حساب نشط</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main content: second in DOM = left side in RTL flex -->
+      <div class="flex-1 flex flex-col min-w-0">
+
         <!-- Navbar -->
         <nav class="navbar bg-white shadow-sm border-b border-gray-200 px-6">
+          <!-- Mobile hamburger -->
           <div class="flex-none lg:hidden">
-            <label for="main-drawer" class="btn btn-ghost btn-square">
+            <button onclick="openSidebar()" class="btn btn-ghost btn-square">
               ☰
-            </label>
+            </button>
           </div>
 
           <!-- Logo -->
@@ -100,137 +235,23 @@
         </nav>
 
         <!-- Main Content -->
-        <main id="main-content" class="p-4 md:p-8 w-full">
+        <main id="main-content" class="p-4 md:p-8">
           {% block content %}{% endblock %}
         </main>
-      </div>
 
-      <!-- Sidebar -->
-      <div class="drawer-side">
-        <aside
-          class="w-72 lg:w-72 min-h-full bg-white border-l border-gray-200 flex flex-col"
-        >
-          <!-- Logo Area -->
-          <div
-            class="px-6 py-5 flex justify-between items-center border-b border-gray-100"
-          >
-            <h1
-              class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
-            >
-              مُجدد
-            </h1>
-          </div>
-
-          <!-- Menu -->
-          <div class="flex-1 px-4 py-6 space-y-6 text-sm">
-            <!-- Section -->
-            <div>
-              <p class="text-gray-400 text-xs mb-3">الرئيسية</p>
-              <ul class="space-y-1">
-                <li>
-                  <a
-                    href="{% url 'dashboard:dashboard' %}"
-                    class="flex items-center gap-3 px-3 py-2 rounded-lg bg-purple-50 text-purple-600 font-medium"
-                  >
-                    <i data-lucide="home" class="w-4 h-4"></i>
-                    <span>لوحة التحكم</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Section -->
-            <div>
-              <p class="text-gray-400 text-xs mb-3">الإدارة</p>
-              <ul class="space-y-1">
-                <li>
-                  <a
-                    href="{% url 'subscriptions:subscriptions' %}"
-                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                  >
-                    <i data-lucide="credit-card" class="w-4 h-4"></i>
-                    <span>الاشتراكات</span>
-                  </a>
-                </li>
-
-                <!-- <li>
-                    <a href="{% url 'billing:billing' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                        <span>الفواتير</span>
-                    </a>
-                </li> -->
-
-                <li>
-                  <a
-                    href="{% url 'customers:customers' %}"
-                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                  >
-                    <i data-lucide="users" class="w-4 h-4"></i>
-                    <span>العملاء</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="{% url 'subscriptions:plans' %}"
-                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                  >
-                    <i data-lucide="box" class="w-4 h-4"></i>
-                    <span>الباقات</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="{% url 'customers:customers' %}"
-                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                  >
-                    <i data-lucide="puzzle" class="w-4 h-4"></i>
-                    <span>الإضافات</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Divider -->
-            <div class="border-t border-gray-200 pt-6">
-              <p class="text-gray-400 text-xs mb-3">النظام</p>
-              <ul class="space-y-1">
-                <li>
-                  <a
-                    href="#"
-                    class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                  >
-                    <span>⚙️</span>
-                    <span>الإعدادات</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- User Footer -->
-          <div
-            class="border-t border-gray-200 p-4 flex items-center gap-3 bg-gray-50"
-          >
-            <div
-              class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold"
-            >
-              {% if request.user.image %}
-              <img
-                src="{{ request.user.image.url }}"
-                alt="Profile Image"
-                class="w-10 h-10 rounded-full"
-              />
-              {% else %} {{ request.user.username|first|upper }} {% endif %}
-            </div>
-            <div>
-              <p class="text-sm font-medium">{{ request.user.username }}</p>
-              <p class="text-xs text-gray-400">حساب نشط</p>
-            </div>
-          </div>
-        </aside>
       </div>
     </div>
+
     <script>
+      function openSidebar() {
+        document.getElementById("sidebar").classList.remove("translate-x-full");
+        document.getElementById("sidebar-overlay").classList.remove("hidden");
+      }
+      function closeSidebar() {
+        document.getElementById("sidebar").classList.add("translate-x-full");
+        document.getElementById("sidebar-overlay").classList.add("hidden");
+      }
+
       lucide.createIcons();
       document.body.addEventListener("htmx:afterSwap", function () {
         lucide.createIcons();
