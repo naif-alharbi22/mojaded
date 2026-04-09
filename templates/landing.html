@@ -22,12 +22,13 @@
     </h1>
 
     <div class="flex items-center gap-4">
-
-        <!-- Dark Mode Button -->
-       
-        <a href="{% url 'login' %}" 
-           class="px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:scale-105 transition">
+        <a href="{% url 'login' %}"
+           class="px-6 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
             تسجيل الدخول
+        </a>
+        <a href="{% url 'register' %}"
+           class="px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:scale-105 transition">
+            إنشاء حساب
         </a>
     </div>
 </nav>
@@ -48,12 +49,12 @@
     </p>
 
     <div class="flex justify-center gap-4">
-        <a href="{% url 'login' %}" 
+        <a href="{% url 'register' %}"
            class="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xl hover:scale-105 transition">
-            ابدأ الآن
+            ابدأ الآن مجانًا
         </a>
 
-        <a href="#features" 
+        <a href="#features"
            class="px-8 py-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
             تعرف أكثر
         </a>
@@ -101,9 +102,9 @@
         جاهز تبدأ إدارة اشتراكاتك؟
     </h3>
 
-    <a href="{% url 'login' %}"
+    <a href="{% url 'register' %}"
        class="px-8 py-3 bg-white text-purple-700 font-semibold rounded-xl shadow-lg hover:scale-105 transition">
-        تسجيل الدخول
+        ابدأ الآن
     </a>
 
 </section>

@@ -1,7 +1,9 @@
 from django.db import models
 from organizations.models import Organization
+from common.managers import TenantManager
 
 class Customer(models.Model):
+    objects = TenantManager()
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
