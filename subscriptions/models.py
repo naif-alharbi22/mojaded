@@ -5,9 +5,11 @@ from customers.models import Customer
 from dateutil.relativedelta import relativedelta
 from billing.models import Invoice
 from django.utils import timezone
+from common.managers import TenantManager
 
 
 class Plan(models.Model):
+    objects = TenantManager()
     BILLING_CYCLE_CHOICES = [
         ("monthly", "Monthly"),
         ("yearly", "Yearly"),
@@ -34,6 +36,8 @@ class Plan(models.Model):
         return self.name
 
 class Subscription(models.Model):
+    objects = TenantManager()
+
     STATUS_CHOICES = [
     ("pending", "Pending"),
     ("active", "Active"),        
@@ -135,6 +139,8 @@ class Subscription(models.Model):
 
 
 class AddOn(models.Model):
+    objects = TenantManager()
+
     BILLING_TYPE_CHOICES = [
         ("monthly", "Monthly"),
         ("yearly", "Yearly"),
