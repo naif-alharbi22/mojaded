@@ -83,6 +83,12 @@ TEMPLATES = [
     },
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://mojaded-742969944647.europe-west1.run.app"]
+
+ALLOWED_HOSTS = [
+    "mojaded-742969944647.europe-west1.run.app"
+]
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
