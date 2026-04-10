@@ -26,8 +26,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fjlhju=#hmvq1guq@p$v#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
-
 
 # Application definition
 
@@ -87,7 +85,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://mojaded-742969944647.europe-west1.run.app"]
 
 ALLOWED_HOSTS = [
-    "mojaded-742969944647.europe-west1.run.app"
+    "mojaded-742969944647.europe-west1.run.app",
+    "localhost",
+    "127.0.0.1",
 ]
 WSGI_APPLICATION = 'core.wsgi.application'
 
