@@ -13,4 +13,4 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput
 
-CMD exec gunicorn core.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4
+CMD sh -c "python manage.py migrate --noinput && gunicorn core.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4"
