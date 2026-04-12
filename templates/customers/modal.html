@@ -5,7 +5,7 @@
     
 <form
     method="post"
-    hx-post="{% url 'customers:new_customer' %}"
+    hx-post="{% if form.instance.id %}{% url 'customers:edit_customer' form.instance.id %}{% else %}{% url 'customers:new_customer' %}{% endif %}"
     hx-target="#modal"
     hx-swap="innerHTML"
     class="modal-box max-w-2xl p-0 overflow-hidden rounded-2xl">
@@ -14,8 +14,8 @@
 
     <!-- Header -->
     <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white">
-        <h3 class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            إضافة عميل جديد
+        <h3 class="text-base font-bold px-4 py-1.5 rounded-lg bg-[rgba(0,201,141,0.1)] text-[#00c98d] border border-[rgba(0,201,141,0.2)]">
+            {% if form.instance.id %}تعديل العميل{% else %}إضافة عميل جديد{% endif %}
         </h3>
 
         <button type="button" onclick="closeModal(this)">
@@ -84,7 +84,7 @@
     <div class="px-6 py-4 border-t border-gray-200 bg-white flex justify-end gap-3">
         <button type="submit"
             class="btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-none hover:opacity-90">
-            إنشاء
+            {% if form.instance.id %}تحديث{% else %}إنشاء{% endif %}
         </button>
     </div>
 

@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Q
+from django.views.decorators.http import require_http_methods
+from django.db.models import Q
 
 from common.toast_utils import toast_response
 from customers.forms import CustomerForm
@@ -57,3 +59,10 @@ def edit_customer(request, customer_id):
         form = CustomerForm(instance=customer)
 
     return render(request, "customers/modal.html", {"form": form})
+
+
+@require_http_methods(["DELETE"])
+def delete_customer(request, customer_id):
+    customer = Customer.objects.for_org(request.organization).get(id=customer_id)
+    customer.delete()
+    return toast_response("تم حذف العميل بنجاح", type="success")

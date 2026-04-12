@@ -15,9 +15,9 @@
       class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white"
     >
       <h3
-        class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
+        class="text-base font-bold px-4 py-1.5 rounded-lg bg-[rgba(0,201,141,0.1)] text-[#00c98d] border border-[rgba(0,201,141,0.2)]"
       >
-        {% translate "New Subscription" %}
+        {% if subscription.id %}تعديل الاشتراك{% else %}إضافة اشتراك جديد{% endif %}
       </h3>
 
 <button type="button" onclick="closeModal(this)">
@@ -142,7 +142,7 @@
         type="submit"
         class="btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-none hover:opacity-90"
       >
-        {% translate "Create" %}
+        {% if subscription.id %}تحديث{% else %}إنشاء{% endif %}
       </button>
     </div>
   </form>

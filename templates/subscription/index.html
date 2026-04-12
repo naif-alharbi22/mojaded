@@ -10,20 +10,30 @@
     <div class="flex items-center gap-2">
 
         <!-- ✅ SEARCH FORM -->
-        <form 
+        <form id="filters"
             method="get"
             hx-get="{% url 'subscriptions:subscriptions' %}"
-            hx-trigger="input changed delay:500ms from:input[name='search'], keyup[key=='Enter']"
-            hx-target="#table-subscriptions"
-            hx-select="#table-subscriptions"
-            hx-swap="outerHTML"
+            hx-trigger="input delay:500ms from:input[name='search'], change from:select, keyup[key=='Enter']"
+            hx-target="#tbody"
+            hx-swap="innerHTML"
             class="flex items-center gap-2">
 
             <input type="search"
-                placeholder="search"
+                placeholder="بحث..."
                 class="input page-search-input w-64"
                 name="search"
                 value="{{ search }}" />
+                
+            <select name="status" class="select select-bordered" style="height: 2.5rem; min-height: 2.5rem;">
+                <option value="">الكل (الحالة)</option>
+                <option value="active" {% if status == 'active' %}selected{% endif %}>نشط</option>
+                <option value="pending" {% if status == 'pending' %}selected{% endif %}>بانتظار الدفع</option>
+                <option value="past_due" {% if status == 'past_due' %}selected{% endif %}>متأخر</option>
+                <option value="trial" {% if status == 'trial' %}selected{% endif %}>تجريبي</option>
+                <option value="paused" {% if status == 'paused' %}selected{% endif %}>موقوف مؤقتًا</option>
+                <option value="cancelled" {% if status == 'cancelled' %}selected{% endif %}>ملغي</option>
+                <option value="expired" {% if status == 'expired' %}selected{% endif %}>منتهي</option>
+            </select>
         </form>
 
         <button class="btn btn-soft btn-primary"
@@ -51,7 +61,7 @@
                 <th>مبلغ الاشتراك</th>
                 <th>تاريخ التجديد</th>
                 <th>الحالة</th>
-                <th>تعديل</th>
+                <th></th>
             </tr>
         </thead>
 
@@ -74,12 +84,22 @@
                     </span>
                 </td>
                 <td>
-                    <button class=""
-                        hx-get="{% url 'subscriptions:edit_subscription' subscription.id %}"
-                        hx-target="#main-content"
-                        hx-swap="beforeend">
-                        <i data-lucide="edit" class="w-4 h-4"></i>
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <button class="btn btn-ghost btn-sm text-blue-500 hover:bg-blue-500/10 hover:text-blue-600 transition-colors"
+                            hx-get="{% url 'subscriptions:edit_subscription' subscription.id %}"
+                            hx-target="#main-content"
+                            hx-swap="beforeend"
+                            title="تعديل">
+                            <i data-lucide="edit" class="w-4 h-4"></i>
+                        </button>
+                        <button class="btn btn-ghost btn-sm text-red-500 hover:bg-red-500/10 hover:text-red-600 transition-colors"
+                            hx-delete="{% url 'subscriptions:delete_subscription' subscription.id %}"
+                            hx-confirm="هل أنت متأكد من حذف الاشتراك؟ لن تستطيع التراجع عن هذه الخطوة."
+                            hx-swap="none"
+                            title="حذف">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                 </td>
             </tr>
             {% empty %}

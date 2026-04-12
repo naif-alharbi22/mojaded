@@ -1,46 +1,542 @@
 {% load static %}
 <!doctype html>
-<html lang="ar" dir="rtl" data-theme="light">
+<html lang="ar" dir="rtl" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}مُجدد{% endblock %}</title>
+    <title>{% block title %}مُجدد{% endblock %} | إدارة الاشتراكات</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link href="{% static 'css/output.css' %}" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-    <script type="module">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+      :root {
+        color-scheme: dark;
+        --g:     #00c98d;
+        --g2:    #00a374;
+        --g3:    #006b4d;
+        --dark:  #07090d;
+        --dark2: #0c1117;
+        --dark3: #111820;
+        --dark4: #161f28;
+        --border:  rgba(0,201,141,0.10);
+        --border2: rgba(0,201,141,0.20);
+        --border3: rgba(0,201,141,0.35);
+        --text:  #dff5ec;
+        --muted: #5d8070;
+        --muted2:#3a5244;
+        --font:  'Cairo', sans-serif;
+
+        --rounded-box: 14px;
+        --rounded-btn: 8px;
+        --rounded-badge: 99px;
+      }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: var(--font);
+        direction: rtl;
+        background: var(--dark);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      
+      body.modal-open, body:has(.modal-open) {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+      }
+
+      a { text-decoration: none; color: inherit; }
+
+      /* ─── SCROLLBAR ─── */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: var(--dark); }
+      ::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 99px; }
+
+      /* ─── SIDEBAR ─── */
+      #sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 40;
+        display: none;
+      }
+      #sidebar-overlay.show { display: block; }
+
+      #sidebar {
+        position: fixed;
+        inset-block: 0;
+        inset-inline-start: 0;
+        z-index: 50;
+        width: 272px;
+        background: var(--dark2);
+        border-inline-end: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        transform: translateX(100%);
+        transition: transform .3s ease;
+      }
+      @media (min-width: 1024px) {
+        #sidebar {
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          transform: translateX(0) !important;
+          flex-shrink: 0;
+        }
+      }
+      #sidebar.open { transform: translateX(0); }
+
+      /* Logo area */
+      .sidebar-logo {
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+      }
+      .sidebar-logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--g);
+        letter-spacing: -0.5px;
+      }
+
+      /* Menu */
+      .sidebar-menu {
+        flex: 1;
+        padding: 1.5rem 1rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .sidebar-section-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted2);
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        margin-bottom: .5rem;
+        padding: 0 .5rem;
+      }
+      .sidebar-nav-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .sidebar-nav-link {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding: .55rem .75rem;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--muted);
+        transition: background .2s, color .2s;
+        cursor: pointer;
+      }
+      .sidebar-nav-link:hover {
+        background: rgba(0,201,141,0.07);
+        color: var(--text);
+      }
+      .sidebar-nav-link.active {
+        background: rgba(0,201,141,0.12);
+        color: var(--g);
+        border: 1px solid var(--border2);
+      }
+      .sidebar-nav-link svg,
+      .sidebar-nav-link i {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        color: inherit;
+      }
+      .sidebar-divider {
+        height: 1px;
+        background: var(--border);
+        margin: .25rem 0;
+      }
+
+      /* User footer */
+      .sidebar-user {
+        border-top: 1px solid var(--border);
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        background: var(--dark3);
+      }
+      .sidebar-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--g3);
+        color: var(--g);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid var(--border2);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .sidebar-avatar img { width: 100%; height: 100%; object-fit: cover; }
+      .sidebar-user-name { font-size: 14px; font-weight: 600; color: var(--text); }
+      .sidebar-user-status { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+      /* ─── TOP NAVBAR ─── */
+      .topnav {
+        background: rgba(7,9,13,0.9);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+        padding: .9rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 30;
+      }
+      .topnav-title {
+        flex: 1;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--g);
+        letter-spacing: -0.3px;
+      }
+      .topnav-user {
+        position: relative;
+      }
+      .topnav-user-btn {
+        background: rgba(0,201,141,0.07);
+        border: 1px solid var(--border2);
+        border-radius: 8px;
+        padding: .45rem 1rem;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        font-family: var(--font);
+        transition: background .2s, border-color .2s;
+      }
+      .topnav-user-btn:hover { background: rgba(0,201,141,0.12); border-color: var(--border3); }
+      .topnav-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        background: var(--dark3);
+        border: 1px solid var(--border2);
+        border-radius: 10px;
+        min-width: 140px;
+        overflow: hidden;
+        z-index: 99;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      }
+      .topnav-dropdown.show { display: block; }
+      .topnav-dropdown a {
+        display: block;
+        padding: .65rem 1rem;
+        font-size: 13px;
+        color: #e57373;
+        transition: background .2s;
+      }
+      .topnav-dropdown a:hover { background: rgba(229,115,115,0.08); }
+
+      .hamburger-btn {
+        background: none;
+        border: 1px solid var(--border2);
+        border-radius: 7px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--muted);
+        transition: border-color .2s, color .2s;
+      }
+      .hamburger-btn:hover { border-color: var(--g); color: var(--g); }
+
+      /* ─── LAYOUT ─── */
+      .app-shell { display: flex; min-height: 100vh; }
+      .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+      #main-content { padding: 2rem 1.5rem; flex: 1; }
+      @media (min-width: 768px) { #main-content { padding: 2rem; } }
+
+      /* ─── TOAST ─── */
+      .toast-container {
+        position: fixed;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        pointer-events: none;
+      }
+
+
+      /* ════════════════════════════════════════════════
+         COMPREHENSIVE DARK THEME — All Tailwind / DaisyUI
+         ════════════════════════════════════════════════ */
+
+      /* ── Backgrounds ── */
+      .bg-white,
+      .bg-base-100             { background-color: var(--dark2) !important; color: var(--text) !important; }
+      .bg-base-200             { background-color: var(--dark3) !important; }
+      .bg-base-300             { background-color: var(--dark4) !important; }
+      .bg-gray-50              { background-color: var(--dark)  !important; }
+      .bg-gray-100, .bg-zinc-100 { background-color: var(--dark3) !important; }
+      .bg-gray-200             { background-color: var(--dark4) !important; }
+
+      /* ── Text ── */
+      .text-gray-400, .text-gray-500, .text-muted { color: var(--muted) !important; }
+      .text-neutral-800, .text-gray-900, .text-gray-800,
+      .text-base-content        { color: var(--text)  !important; }
+      .text-red-500             { color: #e57373 !important; }
+      .text-error               { color: #e57373 !important; }
+      h1, h2, h3, h4            { color: #f0fff8; font-family: var(--font); }
+      h1.text-2xl               { margin-bottom: 1.5rem; }
+
+      /* ── Borders ── */
+      .border-gray-200, .border-gray-100, .border-zinc-200,
+      .border-base-200,
+      [class*="border-base-content"] { border-color: var(--border2) !important; }
+
+      /* ── Shadows ── */
+      .shadow, .shadow-sm { box-shadow: 0 2px 16px rgba(0,0,0,0.35) !important; }
+
+      /* ── Table wrapper ── */
+      .overflow-x-auto,
+      .overflow-x-auto.rounded-box,
+      div[class*="border-base-content"] {
+        background: var(--dark2) !important;
+        border-color: var(--border2) !important;
+        border-radius: 14px !important;
+      }
+
+      /* ── Tables ── */
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font);
+        color: var(--text) !important;
+        background: transparent !important;
+      }
+      /* All cells */
+      .table th, .table td,
+      .table :where(th, td) {
+        padding: .85rem 1rem;
+        text-align: right;
+        border-bottom: 1px solid var(--border) !important;
+        background: transparent !important;
+        color: var(--text) !important;
+        font-size: 14px;
+      }
+      /* Header row */
+      .table thead, .table thead tr,
+      .table :where(thead) {
+        background: rgba(0,0,0,0.25) !important;
+      }
+      .table thead th,
+      .table :where(thead th) {
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--muted) !important;
+        border-bottom: 1px solid var(--border2) !important;
+      }
+      /* Body rows */
+      .table tbody tr,
+      .table :where(tbody tr) { background: transparent !important; transition: background .15s; }
+      .table tbody tr:hover,
+      .table :where(tbody tr):hover { background: rgba(0,201,141,0.045) !important; }
+      .table tbody tr:last-child td,
+      .table :where(tbody tr:last-child td) { border-bottom: none !important; }
+
+      /* ── Inputs ── */
+      select, option, input[type="radio"], input[type="checkbox"] {
+        accent-color: var(--g) !important;
+      }
+      select:focus > option:checked {
+        background-color: var(--g) !important;
+        color: var(--dark) !important;
+      }
+      .radio-primary, .radio-primary:checked {
+        border-color: var(--g) !important;
+        color: var(--g) !important;
+      }
+      input:not([type="checkbox"]):not([type="radio"]),
+      select, textarea, .input, .select, .textarea {
+        background: var(--dark4) !important;
+        border: 1px solid var(--border2) !important;
+        color: var(--text) !important;
+        font-family: var(--font) !important;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color .2s;
+      }
+      input:not([type="checkbox"]):not([type="radio"]):focus,
+      select:focus, textarea:focus, .input:focus {
+        border-color: var(--g) !important;
+        box-shadow: 0 0 0 2px rgba(0,201,141,0.15) !important;
+      }
+      input::placeholder, textarea::placeholder { color: var(--muted) !important; }
+      input:disabled, select:disabled, textarea:disabled {
+        background: var(--dark3) !important;
+        color: var(--muted) !important;
+        cursor: not-allowed; opacity: .7;
+      }
+      label, .label, .label-text { color: var(--text) !important; font-family: var(--font); }
+      .form-control { display: flex; flex-direction: column; gap: .35rem; }
+      .page-search-input {
+        background: var(--dark4) !important;
+        border: 1px solid var(--border2) !important;
+        color: var(--text) !important;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: var(--font);
+        transition: border-color .2s;
+      }
+      .page-search-input:focus { border-color: var(--g) !important; outline: none; }
+      .page-search-input::placeholder { color: var(--muted) !important; }
+
+      /* ── Buttons ── */
+      .btn { font-family: var(--font) !important; border-radius: 8px !important; font-weight: 600; }
+      .btn-primary,
+      .btn-soft.btn-primary {
+        background: var(--g) !important;
+        color: #07090d !important;
+        border-color: transparent !important;
+      }
+      .btn-primary:hover, .btn-soft.btn-primary:hover {
+        background: var(--g2) !important; transform: translateY(-1px);
+      }
+      .btn-ghost {
+        background: transparent !important;
+        border: 1px solid var(--border2) !important;
+        color: var(--text) !important;
+      }
+      .btn-ghost:hover { background: rgba(0,201,141,0.06) !important; border-color: var(--g) !important; }
+      .btn-outline {
+        background: transparent !important;
+        border: 1px solid var(--border2) !important;
+        color: var(--text) !important;
+      }
+      .btn-outline:hover { background: rgba(0,201,141,0.08) !important; border-color: var(--g) !important; }
+      .bg-gradient-to-r.from-purple-600,
+      button[class*="from-purple"] {
+        background: var(--g) !important;
+        background-image: none !important;
+        color: #07090d !important;
+      }
+
+      /* ── Badges ── */
+      .badge { padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; }
+      .badge-success, .badge-success.text-white {
+        background: rgba(0,201,141,0.12) !important;
+        color: var(--g) !important;
+        border: 1px solid var(--border2) !important;
+      }
+      .badge-error  { background: rgba(229,115,115,0.12) !important; color: #e57373 !important; border: 1px solid rgba(229,115,115,0.25) !important; }
+      .badge-warning{ background: rgba(251,191,36,0.12)  !important; color: #fbbf24 !important; border: 1px solid rgba(251,191,36,0.25) !important; }
+      .badge-info   { background: rgba(59,130,246,0.12)  !important; color: #60a5fa !important; border: 1px solid rgba(59,130,246,0.25) !important; }
+      .badge-neutral{ background: rgba(93,128,112,0.12)  !important; color: var(--muted) !important; border: 1px solid var(--border) !important; }
+
+      /* ── Cards ── */
+      .bg-white.shadow.rounded-lg,
+      .bg-white.shadow,
+      .bg-white.border {
+        background: var(--dark3) !important;
+        border: 1px solid var(--border2) !important;
+        border-radius: 14px !important;
+        color: var(--text) !important;
+      }
+
+      /* ── Modal / Dialog ── */
+      .modal-box {
+        background: var(--dark3) !important;
+        border: 1px solid var(--border2) !important;
+        border-radius: 16px !important;
+        color: var(--text) !important;
+      }
+
+      /* ── Dropdown ── */
+      .dropdown-content, .menu.dropdown-content {
+        background: var(--dark3) !important;
+        border: 1px solid var(--border2) !important;
+        color: var(--text) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4) !important;
+      }
+      .menu li > *, .menu li a { color: var(--text) !important; }
+      .menu li > *:hover, .menu li a:hover { background: rgba(0,201,141,0.08) !important; }
+
+      /* ── ApexCharts ── */
+      .apexcharts-canvas { background: transparent !important; }
+      .apexcharts-text tspan,
+      .apexcharts-xaxis-label tspan,
+      .apexcharts-yaxis-label tspan { fill: var(--muted) !important; }
+      .apexcharts-gridline { stroke: rgba(0,201,141,0.08) !important; }
+      .apexcharts-tooltip {
+        background: var(--dark3) !important;
+        border: 1px solid var(--border2) !important;
+        color: var(--text) !important;
+      }
+      .apexcharts-tooltip-title { background: var(--dark4) !important; border-color: var(--border) !important; }
+
+      /* ── Purple → Green ── */
+      .text-purple-600, .from-purple-600, .to-indigo-600 { color: var(--g) !important; }
+      .bg-purple-600 { background: var(--g) !important; }
+      .bg-purple-50  { background: rgba(0,201,141,0.10) !important; }
+      .hover\:bg-gray-100:hover { background: rgba(0,201,141,0.06) !important; }
+      .hover\:bg-purple-50:hover { background: rgba(0,201,141,0.08) !important; }
+
+      /* ── Misc ── */
+      hr, .divider { border-color: var(--border) !important; }
+      .alert { background: var(--dark3) !important; border-color: var(--border2) !important; color: var(--text) !important; }
+
+      @media (max-width: 1023px) { .lg-hidden { display: none; } }
+    </style>
+
+
+    <script>
       document.addEventListener("DOMContentLoaded", function () {
         htmx.on("htmx:afterSwap", (e) => {
           const target = e.detail.target;
           const response = e.detail.xhr?.response;
-
-          // Close modal if response contains toast OOB swap
           if (
             target.matches("dialog.modal, .modal") &&
             response &&
             response.includes("hx-swap-oob")
           ) {
-            // Prevent running multiple times
             if (target.dataset.closing) return;
             target.dataset.closing = "true";
-
-            // Check if toast has data-close-modal="false" attribute
-            const toastCloseModal = response.match(
-              /data-close-modal="(false|true)"/,
-            );
-            const shouldCloseFromToast = toastCloseModal
-              ? toastCloseModal[1] === "true"
-              : true;
-            // Check for auto-close attribute on modal
+            const toastCloseModal = response.match(/data-close-modal="(false|true)"/);
+            const shouldCloseFromToast = toastCloseModal ? toastCloseModal[1] === "true" : true;
             const autoClose = target.getAttribute("auto-close")
               ? target.getAttribute("auto-close") == "true"
               : true;
-
-            // Only close if both modal and toast allow it
             if (autoClose && shouldCloseFromToast) {
-              // Ensure browser processes before starting close animation
               requestAnimationFrame(() => {
                 target.classList.remove("modal-open");
                 setTimeout(() => target.remove(), 500);
@@ -53,189 +549,134 @@
     </script>
   </head>
 
-  <body
-    hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
-    class="min-h-screen bg-gray-50"
-  >
+  <body>
 
     <!-- Mobile overlay -->
-    <div
-      id="sidebar-overlay"
-      class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"
-      onclick="closeSidebar()"
-    ></div>
+    <div id="sidebar-overlay" onclick="closeSidebar()"></div>
 
-    <div class="flex min-h-screen">
+    <div class="app-shell">
 
-      <!-- Sidebar: first in DOM = right side in RTL flex -->
-      <aside
-        id="sidebar"
-        class="fixed inset-y-0 start-0 z-50 w-72 bg-white border-e border-gray-200 flex flex-col
-               translate-x-full transition-transform duration-300
-               lg:sticky lg:top-0 lg:h-screen lg:translate-x-0"
-      >
-        <!-- Logo Area -->
-        <div
-          class="px-6 py-5 flex justify-between items-center border-b border-gray-100"
-        >
-          <h1
-            class="text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
-          >
-            مُجدد
-          </h1>
+      <!-- ─── SIDEBAR ─── -->
+      <aside id="sidebar">
+
+        <!-- Logo -->
+        <div class="sidebar-logo">
+          <span class="sidebar-logo-text">مُجدد</span>
         </div>
 
         <!-- Menu -->
-        <div class="flex-1 px-4 py-6 space-y-6 text-sm overflow-y-auto">
-          <!-- Section -->
+        <div class="sidebar-menu">
+
+          <!-- الرئيسية -->
           <div>
-            <p class="text-gray-400 text-xs mb-3">الرئيسية</p>
-            <ul class="space-y-1">
+            <p class="sidebar-section-label">الرئيسية</p>
+            <ul class="sidebar-nav-list">
               <li>
-                <a
-                  href="{% url 'dashboard:dashboard' %}"
-                  class="flex items-center gap-3 px-3 py-2 rounded-lg bg-purple-50 text-purple-600 font-medium"
-                >
-                  <i data-lucide="home" class="w-4 h-4"></i>
+                <a href="{% url 'dashboard:dashboard' %}" class="sidebar-nav-link active">
+                  <i data-lucide="home"></i>
                   <span>لوحة التحكم</span>
                 </a>
               </li>
             </ul>
           </div>
 
-          <!-- Section -->
+          <!-- الإدارة -->
           <div>
-            <p class="text-gray-400 text-xs mb-3">الإدارة</p>
-            <ul class="space-y-1">
+            <p class="sidebar-section-label">الإدارة</p>
+            <ul class="sidebar-nav-list">
               <li>
-                <a
-                  href="{% url 'subscriptions:subscriptions' %}"
-                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <i data-lucide="credit-card" class="w-4 h-4"></i>
+                <a href="{% url 'subscriptions:subscriptions' %}" class="sidebar-nav-link">
+                  <i data-lucide="credit-card"></i>
                   <span>الاشتراكات</span>
                 </a>
               </li>
-
-              <!-- <li>
-                  <a href="{% url 'billing:billing' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
-                      <i data-lucide="file-text" class="w-4 h-4"></i>
-                      <span>الفواتير</span>
-                  </a>
-              </li> -->
-
               <li>
-                <a
-                  href="{% url 'customers:customers' %}"
-                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <i data-lucide="users" class="w-4 h-4"></i>
+                <a href="{% url 'customers:customers' %}" class="sidebar-nav-link">
+                  <i data-lucide="users"></i>
                   <span>العملاء</span>
                 </a>
               </li>
               <li>
-                <a
-                  href="{% url 'subscriptions:plans' %}"
-                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <i data-lucide="box" class="w-4 h-4"></i>
+                <a href="{% url 'subscriptions:plans' %}" class="sidebar-nav-link">
+                  <i data-lucide="box"></i>
                   <span>الباقات</span>
                 </a>
               </li>
               <li>
-                <a
-                  href="{% url 'customers:customers' %}"
-                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <i data-lucide="puzzle" class="w-4 h-4"></i>
+                <a href="{% url 'customers:customers' %}" class="sidebar-nav-link">
+                  <i data-lucide="puzzle"></i>
                   <span>الإضافات</span>
                 </a>
               </li>
             </ul>
           </div>
 
-          <!-- Divider -->
-          <div class="border-t border-gray-200 pt-6">
-            <p class="text-gray-400 text-xs mb-3">النظام</p>
-            <ul class="space-y-1">
+          <!-- النظام -->
+          <div>
+            <div class="sidebar-divider"></div>
+            <p class="sidebar-section-label" style="margin-top:.75rem">النظام</p>
+            <ul class="sidebar-nav-list">
               <li>
-                <a
-                  href="{% url 'setting:view_settings' %}"
-                  class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <i data-lucide="settings" class="w-4 h-4"></i>
+                <a href="{% url 'setting:view_settings' %}" class="sidebar-nav-link">
+                  <i data-lucide="settings"></i>
                   <span>الإعدادات</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'logout' %}" class="sidebar-nav-link" style="color: #e57373;">
+                  <i data-lucide="log-out"></i>
+                  <span>تسجيل الخروج</span>
                 </a>
               </li>
             </ul>
           </div>
+
         </div>
 
         <!-- User Footer -->
-        <div
-          class="border-t border-gray-200 p-4 flex items-center gap-3 bg-gray-50"
-        >
-          <div
-            class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold"
-          >
+        <div class="sidebar-user">
+          <div class="sidebar-avatar">
             {% if request.user.image %}
-            <img
-              src="{{ request.user.image.url }}"
-              alt="Profile Image"
-              class="w-10 h-10 rounded-full"
-            />
-            {% else %} {{ request.user.username|first|upper }} {% endif %}
+              <img src="{{ request.user.image.url }}" alt="Profile Image" />
+            {% else %}
+              {{ request.user.username|first|upper }}
+            {% endif %}
           </div>
           <div>
-            <p class="text-sm font-medium">{{ request.user.username }}</p>
-            <p class="text-xs text-gray-400">حساب نشط</p>
+            <p class="sidebar-user-name">{{ request.user.username }}</p>
+            <p class="sidebar-user-status">حساب نشط</p>
           </div>
         </div>
+
       </aside>
 
-      <!-- Main content: second in DOM = left side in RTL flex -->
-      <div class="flex-1 flex flex-col min-w-0">
+      <!-- ─── MAIN AREA ─── -->
+      <div class="main-area">
 
-        <!-- Navbar -->
-        <nav class="navbar bg-white shadow-sm border-b border-gray-200 px-6">
-          <!-- Mobile hamburger -->
-          <div class="flex-none lg:hidden">
-            <button onclick="openSidebar()" class="btn btn-ghost btn-square">
-              ☰
+        <!-- Top Navbar -->
+        <nav class="topnav">
+          <!-- Hamburger (mobile) -->
+          <button class="hamburger-btn" onclick="openSidebar()" id="hamburger-btn" style="display:none">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+
+          <div class="topnav-title">مُجدد</div>
+
+          <!-- User dropdown -->
+          <div class="topnav-user">
+            <button class="topnav-user-btn" onclick="toggleUserMenu()" id="user-menu-btn">
+              {{ request.user.username }}
             </button>
-          </div>
-
-          <!-- Logo -->
-          <div class="flex-1 text-lg font-bold">
-            <span
-              class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
-            >
-              مُجدد
-            </span>
-          </div>
-
-          <!-- User -->
-          <div class="flex-none">
-            <div class="dropdown dropdown-end">
-              <div tabindex="0" class="btn btn-ghost">
-                {{ request.user.username }}
-              </div>
-              <ul
-                tabindex="0"
-                class="menu menu-sm dropdown-content bg-white rounded-xl shadow-lg mt-3 w-40 p-2"
-              >
-                <li>
-                  <a href="{% url 'logout' %}" class="text-error"
-                    >تسجيل الخروج</a
-                  >
-                </li>
-              </ul>
+            <div class="topnav-dropdown" id="user-dropdown">
+              <a href="{% url 'logout' %}">تسجيل الخروج</a>
             </div>
           </div>
         </nav>
 
         <!-- Main Content -->
-        <main id="main-content" class="p-4 md:p-8">
+        <main id="main-content">
           {% block content %}{% endblock %}
         </main>
 
@@ -243,27 +684,82 @@
     </div>
 
     <script>
+      // Sidebar toggle
       function openSidebar() {
-        document.getElementById("sidebar").classList.remove("translate-x-full");
-        document.getElementById("sidebar-overlay").classList.remove("hidden");
+        document.getElementById("sidebar").classList.add("open");
+        document.getElementById("sidebar-overlay").classList.add("show");
       }
       function closeSidebar() {
-        document.getElementById("sidebar").classList.add("translate-x-full");
-        document.getElementById("sidebar-overlay").classList.add("hidden");
+        document.getElementById("sidebar").classList.remove("open");
+        document.getElementById("sidebar-overlay").classList.remove("show");
       }
 
+      // Show hamburger on mobile
+      (function() {
+        function checkMobile() {
+          const btn = document.getElementById("hamburger-btn");
+          if (btn) btn.style.display = window.innerWidth < 1024 ? "flex" : "none";
+        }
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+      })();
+
+      // User dropdown
+      function toggleUserMenu() {
+        document.getElementById("user-dropdown").classList.toggle("show");
+      }
+      document.addEventListener("click", function(e) {
+        const btn = document.getElementById("user-menu-btn");
+        const dd  = document.getElementById("user-dropdown");
+        if (btn && dd && !btn.contains(e.target) && !dd.contains(e.target)) {
+          dd.classList.remove("show");
+        }
+      });
+
+      // Lucide icons
       lucide.createIcons();
       document.body.addEventListener("htmx:afterSwap", function () {
         lucide.createIcons();
       });
+
+      // Modal close helper
       document.addEventListener("DOMContentLoaded", function () {
         window.closeModal = function (el) {
           const modal = el.closest("dialog.modal, .modal");
           if (!modal) return;
-
           modal.classList.remove("modal-open");
           setTimeout(() => modal.remove(), 250);
         };
+      });
+      // HTMX CSRF setup
+      document.body.addEventListener('htmx:configRequest', (event) => {
+        const token = document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+        if (token) {
+          event.detail.headers['X-CSRFToken'] = token;
+        }
+      });
+      
+      // Handle HTMX confirm with SweetAlert2
+      document.body.addEventListener('htmx:confirm', function(e) {
+          if (e.target.hasAttribute('hx-confirm')) {
+              e.preventDefault();
+              Swal.fire({
+                  title: 'تأكيد الحذف',
+                  text: e.detail.question,
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#e57373',
+                  cancelButtonColor: '#5d8070',
+                  confirmButtonText: 'نعم، حذف',
+                  cancelButtonText: 'إلغاء',
+                  background: 'var(--dark3)',
+                  color: 'var(--text)',
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      e.detail.issueRequest(true); // Issue the request
+                  }
+              });
+          }
       });
     </script>
   </body>

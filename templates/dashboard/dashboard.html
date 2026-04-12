@@ -72,9 +72,11 @@ const isRTL = true; // عشان العربية
     const weeklyOccupancyChart = new ApexCharts(weeklyOccupancy, {
         chart: {
             type: "bar",
-            
+            background: "transparent",
             toolbar: { show: false }
         },
+
+        theme: { mode: "dark" },
 
         series: [{
             name: "مشترك",
@@ -83,7 +85,7 @@ const isRTL = true; // عشان العربية
 
         xaxis: {
             categories: weeklyDataCategories,
-            labels: { style: { fontSize: "12px" } }
+            labels: { style: { fontSize: "12px", colors: "#5d8070" } }
         },
 
         yaxis: {
@@ -92,7 +94,8 @@ const isRTL = true; // عشان العربية
             opposite: isRTL,
             tickAmount: 4,
             labels: {
-                formatter: val => val 
+                formatter: val => val,
+                style: { colors: "#5d8070" }
             }
         },
 
@@ -103,15 +106,16 @@ const isRTL = true; // عشان العربية
             }
         },
 
-        colors: ["#7c3aed"], // بنفسجي مطابق لهويتك
+        colors: ["#00c98d"],
 
         grid: {
-            borderColor: "#e5e7eb",
+            borderColor: "rgba(0,201,141,0.10)",
             strokeDashArray: 4
         },
 
         tooltip: {
-            y: { formatter: val => val  }
+            theme: "dark",
+            y: { formatter: val => val }
         },
 
         dataLabels: { enabled: false }
