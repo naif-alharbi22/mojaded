@@ -1,124 +1,535 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مُجدد | إدارة الاشتراكات</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مُجدد | إدارة الاشتراكات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-        }
-    </script>
+    :root {
+      --g:    #00c98d;
+      --g2:   #00a374;
+      --g3:   #006b4d;
+      --dark:  #07090d;
+      --dark2: #0c1117;
+      --dark3: #111820;
+      --dark4: #161f28;
+      --border:  rgba(0,201,141,0.10);
+      --border2: rgba(0,201,141,0.20);
+      --border3: rgba(0,201,141,0.35);
+      --text:  #dff5ec;
+      --muted: #5d8070;
+      --muted2:#3a5244;
+      --font:  'Cairo', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      direction: rtl;
+      background: var(--dark);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 99px; }
+
+    /* ─── LAYOUT ─── */
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 2.5rem; }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,9,13,0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2.5rem;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--g);
+      letter-spacing: -0.5px;
+    }
+    .nav-links { display: flex; gap: 10px; align-items: center; }
+
+    .btn-ghost {
+      padding: 8px 20px;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--font);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-block;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-ghost:hover { border-color: var(--g); background: rgba(0,201,141,0.06); }
+
+    .btn-green {
+      padding: 8px 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--font);
+      font-weight: 600;
+      background: var(--g);
+      color: #07090d;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+      transition: background .2s, transform .15s;
+    }
+    .btn-green:hover { background: var(--g2); transform: translateY(-1px); }
+    .btn-green:active { transform: translateY(0); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      padding: 5rem 2.5rem 4rem;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .hero-text { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,201,141,0.08);
+      color: var(--g);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 99px;
+      margin-bottom: 1.75rem;
+      border: 1px solid var(--border2);
+    }
+    .hero-tag-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--g);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: .5; transform: scale(.8); }
+    }
+
+    .hero h1 {
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.25rem;
+      color: #f0fff8;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--g);
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 2.25rem;
+      max-width: 430px;
+    }
+
+    .hero-cta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+    .btn-hero {
+      padding: 14px 34px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: var(--font);
+      font-weight: 600;
+      background: var(--g);
+      color: #07090d;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+      transition: background .2s, transform .15s, box-shadow .2s;
+    }
+    .btn-hero:hover {
+      background: var(--g2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,201,141,0.25);
+    }
+    .btn-hero:active { transform: translateY(0); }
+
+    .btn-hero-ghost {
+      padding: 14px 26px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: var(--font);
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-block;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-hero-ghost:hover { border-color: var(--g); color: var(--g); }
+
+    /* ─── HERO VISUAL (LEFT) ─── */
+    .hero-visual {
+      position: relative;
+      height: 460px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* glow orb */
+    .hero-glow {
+      position: absolute;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,201,141,0.18) 0%, transparent 68%);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+      animation: breathe 4s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%,100% { transform: translate(-50%,-50%) scale(1); opacity:1; }
+      50%      { transform: translate(-50%,-50%) scale(1.12); opacity:.7; }
+    }
+
+    /* floating cards */
+    .fc {
+      position: absolute;
+      background: rgba(12,17,23,0.9);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 14px 18px;
+      backdrop-filter: blur(10px);
+    }
+    .fc-1 { top: 30px;  right: 10px; width: 210px; animation: float1 5s ease-in-out infinite; }
+    .fc-2 { top: 150px; left:  0px; width: 185px; animation: float2 6s ease-in-out infinite; }
+    .fc-3 { bottom: 50px; right: 30px; width: 170px; animation: float1 7s ease-in-out infinite; }
+    .fc-4 { top: 70px;  left: 25px; width: 145px; animation: float2 5.5s ease-in-out infinite; }
+
+    @keyframes float1 {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-10px); }
+    }
+    @keyframes float2 {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(8px); }
+    }
+
+    .fc-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .fc-val   { font-size: 22px; font-weight: 700; color: var(--g); line-height: 1; }
+    .fc-sub   { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .fc-pill  {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 9px;
+      border-radius: 99px;
+      background: rgba(0,201,141,0.12);
+      color: var(--g);
+      border: 1px solid var(--border2);
+      margin-top: 4px;
+    }
+    .fc-bars  { display: flex; align-items: flex-end; gap: 3px; height: 30px; margin-top: 8px; }
+    .fc-bar   { flex: 1; border-radius: 3px 3px 0 0; background: var(--g3); }
+    .fc-bar.hi { background: var(--g); }
+    .fc-prog  { height: 3px; background: var(--dark4); border-radius: 99px; margin-top: 10px; overflow: hidden; }
+    .fc-prog-f { height: 3px; border-radius: 99px; background: var(--g); }
+
+    /* ─── SECTION DIVIDER ─── */
+    .s-div {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2), transparent);
+      margin: 0 2.5rem;
+    }
+
+    /* ─── SECTION HEADER ─── */
+    .s-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--g);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: .6rem;
+    }
+    .s-title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      text-align: center;
+      margin-bottom: .5rem;
+      color: #f0fff8;
+    }
+    .s-sub {
+      font-size: 15px;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    /* ─── FEATURES ─── */
+    .features-section { padding: 5.5rem 2.5rem; max-width: 1120px; margin: 0 auto; }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .feat {
+      background: var(--dark2);
+      padding: 2.25rem 1.75rem;
+      transition: background .25s;
+      cursor: default;
+    }
+    .feat:hover { background: var(--dark3); }
+    .feat-icon {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      background: rgba(0,201,141,0.08);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.1rem;
+      border: 1px solid var(--border2);
+      transition: background .25s, border-color .25s;
+    }
+    .feat:hover .feat-icon { background: rgba(0,201,141,0.15); border-color: var(--border3); }
+    .feat-icon svg { width: 19px; height: 19px; }
+    .feat h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #f0fff8; }
+    .feat p  { font-size: 13.5px; color: var(--muted); line-height: 1.75; }
+
+    /* ─── CTA ─── */
+    .cta-section { padding: 0 2.5rem 6rem; max-width: 1120px; margin: 0 auto; }
+    .cta-inner {
+      background: var(--dark3);
+      border: 1px solid var(--border2);
+      border-radius: 22px;
+      padding: 5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-glow-orb {
+      position: absolute;
+      width: 480px; height: 220px;
+      border-radius: 50%;
+      background: rgba(0,201,141,0.06);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+    .cta-inner h2 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #f0fff8;
+      letter-spacing: -1px;
+      margin-bottom: .9rem;
+      position: relative;
+    }
+    .cta-inner p {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 2.25rem;
+      position: relative;
+    }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 1.75rem 2.5rem;
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .footer-links { display: flex; gap: 1.75rem; }
+    .footer-links a { color: var(--muted); transition: color .2s; }
+    .footer-links a:hover { color: var(--g); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .nav-inner { padding: 1rem 1.25rem; }
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 3.5rem 1.25rem 3rem;
+        min-height: auto;
+        gap: 3rem;
+      }
+      .hero h1 { font-size: 36px; }
+      .hero-visual { height: 320px; }
+      .fc-1 { width: 170px; top: 10px; }
+      .fc-2 { width: 155px; }
+      .fc-3 { width: 145px; bottom: 20px; }
+      .fc-4 { width: 120px; }
+      .fc-val { font-size: 18px; }
+      .features-section { padding: 4rem 1.25rem; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .cta-section { padding: 0 1.25rem 4rem; }
+      .cta-inner { padding: 3rem 1.5rem; }
+      .cta-inner h2 { font-size: 26px; }
+      .footer { flex-direction: column; gap: 14px; padding: 1.5rem 1.25rem; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+      .s-div { margin: 0 1.25rem; }
+    }
+  </style>
 </head>
+<body>
 
-<body class="bg-white text-gray-800 dark:bg-gray-950 dark:text-gray-100 transition duration-300">
+  <!-- ─── NAV ─── -->
+  <header>
+    <nav class="nav">
+      <div class="nav-inner">
+        <span class="logo">مُجدد</span>
+        <div class="nav-links">
+          {% if request.user.is_authenticated %}
+            <a class="btn-green" href="{% url 'dashboard:dashboard' %}">لوحة التحكم</a>
+          {% else %}
+            <a class="btn-ghost" href="{% url 'login' %}">تسجيل الدخول</a>
+            <a class="btn-green" href="{% url 'register' %}">إنشاء حساب</a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+  </header>
 
-<!-- Navbar -->
-<nav class="flex justify-between items-center px-6 md:px-12 py-6">
-    <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-        مُجدد
-    </h1>
+  <!-- ─── HERO ─── -->
+  <section class="hero">
 
-    <div class="flex items-center gap-4">
-        <a href="{% url 'login' %}"
-           class="px-6 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-            تسجيل الدخول
-        </a>
-        <a href="{% url 'register' %}"
-           class="px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:scale-105 transition">
-            إنشاء حساب
-        </a>
-    </div>
-</nav>
-
-<!-- Hero -->
-<section class="text-center py-24 px-6">
-
-    <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-        إدارة الاشتراكات
-        <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            باحتراف
-        </span>
-    </h2>
-
-    <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10">
+    <!-- النص — يمين -->
+    <div class="hero-text">
+      <div class="hero-tag">
+        <span class="hero-tag-dot"></span>
+        منصة إدارة الاشتراكات الأذكى
+      </div>
+      <h1>إدارة الاشتراكات<em>باحتراف</em></h1>
+      <p class="hero-sub">
         أنشئ خطط، أدر الفواتير، تابع التجديدات،
         وتحكم في الاشتراكات — كل ذلك من منصة واحدة ذكية.
-    </p>
-
-    <div class="flex justify-center gap-4">
-        <a href="{% url 'register' %}"
-           class="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xl hover:scale-105 transition">
-            ابدأ الآن مجانًا
-        </a>
-
-        <a href="#features"
-           class="px-8 py-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-            تعرف أكثر
-        </a>
+      </p>
+      <div class="hero-cta">
+        {% if request.user.is_authenticated %}
+          <a class="btn-hero" href="{% url 'dashboard:dashboard' %}">الذهاب للوحة التحكم</a>
+        {% else %}
+          <a class="btn-hero" href="{% url 'register' %}">ابدأ الآن مجانًا</a>
+        {% endif %}
+        <a class="btn-hero-ghost" href="#features">تعرف أكثر ←</a>
+      </div>
     </div>
 
-</section>
+    <!-- البصري — يسار -->
+    <!--
+      لاستخدام صورة حقيقية بدل الكروت العائمة:
+      استبدل كل <div class="hero-visual"> بـ:
+	 -->
+      <div style="border-radius:20px;overflow:hidden;border:1px solid rgba(0,201,141,.2);">
+        <img src="{% static 'images/hero.jfif' %}" alt="لوحة التحكم" style="width:100%;display:block;">
+      </div>
+   
+     </section>
 
-<!-- Features -->
-<section id="features" class="py-20 px-6 md:px-12">
-    <h3 class="text-3xl font-bold text-center mb-16">لماذا مُجدد؟</h3>
+  <div class="s-div"></div>
 
-    <div class="grid md:grid-cols-3 gap-10">
+  <!-- ─── FEATURES ─── -->
+  <section id="features" class="features-section">
+    <div class="s-eyebrow">لماذا مُجدد؟</div>
+    <div class="s-title">كل ما تحتاجه في مكان واحد</div>
+    <div class="s-sub">كل ما تحتاجه لإدارة اشتراكاتك بكل سهولة واحتراف</div>
 
-        <div class="p-8 rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition">
-            <div class="text-4xl mb-4">💳</div>
-            <h4 class="text-xl font-semibold mb-3">فواتير تلقائية</h4>
-            <p class="text-gray-600 dark:text-gray-400">
-                إنشاء فواتير وتجديد الاشتراكات تلقائيًا بدون تدخل يدوي.
-            </p>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00c98d" stroke-width="1.8">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <path d="M2 10h20"/><path d="M6 15h4"/>
+          </svg>
         </div>
+        <h3>فواتير تلقائية</h3>
+        <p>إنشاء فواتير وتجديد الاشتراكات تلقائيًا بدون تدخل يدوي.</p>
+      </div>
 
-        <div class="p-8 rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition">
-            <div class="text-4xl mb-4">⚙️</div>
-            <h4 class="text-xl font-semibold mb-3">خطط مرنة</h4>
-            <p class="text-gray-600 dark:text-gray-400">
-                اشتراكات شهرية، سنوية، وإضافات لمرة واحدة بكل سهولة.
-            </p>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00c98d" stroke-width="1.8">
+            <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+          </svg>
         </div>
+        <h3>خطط مرنة</h3>
+        <p>اشتراكات شهرية، سنوية، وإضافات لمرة واحدة بكل سهولة.</p>
+      </div>
 
-        <div class="p-8 rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition">
-            <div class="text-4xl mb-4">📊</div>
-            <h4 class="text-xl font-semibold mb-3">تحكم كامل</h4>
-            <p class="text-gray-600 dark:text-gray-400">
-                راقب الحالات، المتأخرات، وحالة كل اشتراك في لوحة واحدة.
-            </p>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00c98d" stroke-width="1.8">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
         </div>
-
+        <h3>تحكم كامل</h3>
+        <p>راقب الحالات، المتأخرات، وحالة كل اشتراك في لوحة واحدة.</p>
+      </div>
     </div>
-</section>
+  </section>
 
-<!-- CTA -->
-<section class="py-24 text-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+  <div class="s-div"></div>
 
-    <h3 class="text-3xl font-bold mb-6">
-        جاهز تبدأ إدارة اشتراكاتك؟
-    </h3>
+  <!-- ─── CTA ─── -->
+  <section class="cta-section" style="padding-top:5.5rem">
+    <div class="cta-inner">
+      <div class="cta-glow-orb"></div>
+      <h2>جاهز تبدأ إدارة اشتراكاتك؟</h2>
+      <p>انضم الآن وابدأ بإدارة اشتراكاتك باحتراف — منصة واحدة تكفي.</p>
+      <div class="cta-btns">
+        {% if request.user.is_authenticated %}
+          <a class="btn-hero" href="{% url 'dashboard:dashboard' %}">الذهاب للوحة التحكم</a>
+        {% else %}
+          <a class="btn-hero" href="{% url 'register' %}">ابدأ الآن</a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
 
-    <a href="{% url 'register' %}"
-       class="px-8 py-3 bg-white text-purple-700 font-semibold rounded-xl shadow-lg hover:scale-105 transition">
-        ابدأ الآن
-    </a>
+  <!-- ─── FOOTER ─── -->
+  <footer class="footer">
+    <span>© 2026 مُجدد — جميع الحقوق محفوظة</span>
 
-</section>
-
-<!-- Footer -->
-<footer class="text-center py-8 text-sm text-gray-500 dark:text-gray-600">
-    © 2026 مُجدد — جميع الحقوق محفوظة
-</footer>
-
-<script>
-function toggleDark() {
-    document.documentElement.classList.toggle('dark')
-}
-</script>
+  </footer>
 
 </body>
 </html>

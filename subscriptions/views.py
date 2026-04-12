@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.utils import timezone
 from django.http import HttpResponse
+from django.views.decorators.http import require_http_methods
 
 from common.toast_utils import toast_response
 from customers.models import Customer
@@ -20,12 +21,18 @@ def subscriptions(request):
     subs = Subscription.objects.for_org(request.organization).select_related("customer", "plan")
 
     search_query = request.GET.get("search", "")
+    status_query = request.GET.get("status", "")
+
     if search_query:
         subs = subs.filter(customer__name__icontains=search_query)
+    
+    if status_query:
+        subs = subs.filter(status=status_query)
 
     context = {
         "subscriptions": subs,
         "search": search_query,
+        "status": status_query,
     }
 
     if request.headers.get("HX-Request"):
@@ -38,12 +45,18 @@ def plans_view(request):
     plans = Plan.objects.for_org(request.organization)
 
     search_query = request.GET.get("search", "")
+    billing_cycle = request.GET.get("billing_cycle", "")
+
     if search_query:
         plans = plans.filter(name__icontains=search_query)
+        
+    if billing_cycle:
+        plans = plans.filter(billing_cycle=billing_cycle)
 
     context = {
         "plans": plans,
         "search": search_query,
+        "billing_cycle": billing_cycle,
     }
 
     if request.headers.get("HX-Request"):
@@ -131,3 +144,17 @@ def edit_subscription(request, subscription_id):
     }
 
     return render(request, "subscription/modal.html", context)
+
+
+@require_http_methods(["DELETE"])
+def delete_subscription(request, subscription_id):
+    subscription = Subscription.objects.for_org(request.organization).get(id=subscription_id)
+    subscription.delete()
+    return toast_response("تم حذف الاشتراك بنجاح", type="success")
+
+
+@require_http_methods(["DELETE"])
+def delete_plan(request, plan_id):
+    plan = Plan.objects.for_org(request.organization).get(id=plan_id)
+    plan.delete()
+    return toast_response("تم حذف الباقة بنجاح", type="success")
