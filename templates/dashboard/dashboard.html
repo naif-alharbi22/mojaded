@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}لوحة التحكم{% endblock %}
+
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-6">مرحبًا بك {{ request.user.username }} 👋</h1>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-4 col-span-1 md:col-span-12 gap-6">
+    
+    <!-- Card 1 -->
+    <div class="bg-white  shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">إجمالي الاشتراكات</h2>
+        <p class="text-3xl font-bold">150</p>
+        <p class="text-sm text-gray-500 mt-2">زيادة بنسبة 10% عن الشهر الماضي</p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-white  shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">الإيرادات الشهرية</h2>
+        <p class="text-3xl font-bold">$12,000</p>
+        <p class="text-sm text-gray-500 mt-2">زيادة بنسبة 15% عن الشهر الماضي</p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-white  shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">العملاء النشطين</h2>
+        <p class="text-3xl font-bold">1200</p>
+        <p class="text-sm text-gray-500 mt-2">زيادة بنسبة 5% عن الشهر الماضي</p>
+    </div>
+    <div class="bg-white  shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">إشتراكات الشهر الحالي</h2>
+        <p class="text-3xl font-bold">1200</p>
+        <p class="text-sm text-gray-500 mt-2">زيادة بنسبة 5% عن الشهر الماضي</p>
+    </div>
+</div>
+<div class=" col-span-1 md:col-span-6 gap-6">
+<div
+                class="flex-col items-center justify-center gap-6 p-4 bg-white border rounded-lg shadow-sm col-span-full lg:col-span-7 border-zinc-200 false">
+                <p class="text-base font-medium text-neutral-800">Weekly Occupancy Movement</p>
+                <div class=" w-full bg-zinc-100 my-2"></div>
+                <div class="w-full flex">
+                    <div id="weekly-occupancy" class="w-full"></div>
+                </div>
+
+            </div>
+</div>
+</div>
+<script type="module">
+import ApexCharts from "https://cdn.jsdelivr.net/npm/apexcharts/+esm";
+
+const isRTL = true; // عشان العربية
+
+(function () {
+
+    const weeklyOccupancy = document.getElementById("weekly-occupancy");
+    if (!weeklyOccupancy) return;
+
+    const weeklyData = [
+        { label: "الأحد", percentage: 72 },
+        { label: "الإثنين", percentage: 81 },
+        { label: "الثلاثاء", percentage: 65 },
+        { label: "الأربعاء", percentage: 90 },
+        { label: "الخميس", percentage: 78 },
+        { label: "الجمعة", percentage: 55 },
+        { label: "السبت", percentage: 88 },
+    ];
+
+    const weeklyDataCategories = weeklyData.map(d => d.label);
+    const weeklyDataValues = weeklyData.map(d => d.percentage);
+
+    const weeklyOccupancyChart = new ApexCharts(weeklyOccupancy, {
+        chart: {
+            type: "bar",
+            background: "transparent",
+            toolbar: { show: false }
+        },
+
+        theme: { mode: "dark" },
+
+        series: [{
+            name: "مشترك",
+            data: weeklyDataValues
+        }],
+
+        xaxis: {
+            categories: weeklyDataCategories,
+            labels: { style: { fontSize: "12px", colors: "#5d8070" } }
+        },
+
+        yaxis: {
+            min: 0,
+            max: 100,
+            opposite: isRTL,
+            tickAmount: 4,
+            labels: {
+                formatter: val => val,
+                style: { colors: "#5d8070" }
+            }
+        },
+
+        plotOptions: {
+            bar: {
+                columnWidth: "45%",
+                borderRadius: 6
+            }
+        },
+
+        colors: ["#00c98d"],
+
+        grid: {
+            borderColor: "rgba(0,201,141,0.10)",
+            strokeDashArray: 4
+        },
+
+        tooltip: {
+            theme: "dark",
+            y: { formatter: val => val }
+        },
+
+        dataLabels: { enabled: false }
+    });
+
+    weeklyOccupancyChart.render();
+
+})();
+</script>
+
+{% endblock %}

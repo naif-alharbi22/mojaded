@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (min-width: 1024px) {
+  .lg\:drawer-open {
+    grid-template-columns: 18rem 1fr;
+  }
+}
