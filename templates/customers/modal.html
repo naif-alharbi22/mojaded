@@ -8,13 +8,13 @@
     hx-post="{% if form.instance.id %}{% url 'customers:edit_customer' form.instance.id %}{% else %}{% url 'customers:new_customer' %}{% endif %}"
     hx-target="#modal"
     hx-swap="innerHTML"
-    class="modal-box max-w-2xl p-0 overflow-hidden rounded-2xl">
+    class="modal-box max-w-2xl p-0 overflow-hidden rounded-2xl bg-dark2 border border-g/20 shadow-2xl">
 
     {% csrf_token %}
 
     <!-- Header -->
-    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white">
-        <h3 class="text-base font-bold px-4 py-1.5 rounded-lg bg-[rgba(0,201,141,0.1)] text-[#00c98d] border border-[rgba(0,201,141,0.2)]">
+    <div class="px-6 py-4 border-b border-g/10 flex items-center justify-between bg-dark3">
+        <h3 class="text-base font-bold px-4 py-1.5 rounded-lg bg-[#00c98d]/10 text-[#00c98d] border border-[#00c98d]/20">
             {% if form.instance.id %}تعديل العميل{% else %}إضافة عميل جديد{% endif %}
         </h3>
 
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Body -->
-    <div class="p-6 space-y-5 bg-gray-50">
+    <div class="p-6 space-y-5 bg-dark">
 
         {% if form.non_field_errors %}
         <div class="alert alert-error text-sm">
@@ -39,7 +39,7 @@
             </label>
             <input type="text" name="name"
                    value="{{ form.name.value|default:'' }}"
-                   class="input input-bordered w-full focus:border-purple-500"
+                   class="input input-bordered w-full focus:border-g focus:ring-2 focus:ring-g/10"
                    required>
             {% if form.name.errors %}
                 <span class="text-red-500 text-sm mt-1">
@@ -55,7 +55,7 @@
             </label>
             <input type="email" name="email"
                    value="{{ form.email.value|default:'' }}"
-                   class="input input-bordered w-full focus:border-purple-500">
+                   class="input input-bordered w-full focus:border-g focus:ring-2 focus:ring-g/10">
             {% if form.email.errors %}
                 <span class="text-red-500 text-sm mt-1">
                     {{ form.email.errors.0 }}
@@ -70,7 +70,7 @@
             </label>
             <input type="text" name="phone"
                    value="{{ form.phone.value|default:'' }}"
-                   class="input input-bordered w-full focus:border-purple-500">
+                   class="input input-bordered w-full focus:border-g focus:ring-2 focus:ring-g/10">
             {% if form.phone.errors %}
                 <span class="text-red-500 text-sm mt-1">
                     {{ form.phone.errors.0 }}
@@ -81,9 +81,9 @@
     </div>
 
     <!-- Footer -->
-    <div class="px-6 py-4 border-t border-gray-200 bg-white flex justify-end gap-3">
+    <div class="px-6 py-4 border-t border-g/10 bg-dark3 flex justify-end gap-3">
         <button type="submit"
-            class="btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-none hover:opacity-90">
+            class="px-6 py-2.5 rounded-lg text-sm font-bold bg-g text-dark hover:bg-g2 hover:-translate-y-[1px] active:translate-y-0 transition-all shadow-[0_4px_15px_rgba(0,201,141,0.2)]">
             {% if form.instance.id %}تحديث{% else %}إنشاء{% endif %}
         </button>
     </div>

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}الإعدادات{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold">الإعدادات</h1>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <!-- Organization Settings -->
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">بيانات المنشأة</h2>
+
+        <form method="post"
+              hx-post="{% url 'setting:view_settings' %}"
+              hx-swap="none"
+              class="space-y-4">
+            {% csrf_token %}
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">اسم المنشأة</span>
+                </label>
+                <input type="text" name="name"
+                       value="{{ form.name.value|default:'' }}"
+                       class="input input-bordered w-full focus:border-purple-500"
+                       required>
+                {% if form.name.errors %}
+                    <span class="text-red-500 text-sm mt-1">{{ form.name.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">حالة الحساب</span>
+                </label>
+                <input type="text"
+                       value="{% if organization.status == 'active' %}نشط{% elif organization.status == 'trial' %}تجريبي{% else %}موقوف{% endif %}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">تاريخ الإنشاء</span>
+                </label>
+                <input type="text"
+                       value="{{ organization.created_at|date:'Y-m-d' }}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+
+            <button type="submit"
+                class="btn bg-gradient-to-r from-purple-600 to-indigo-600 text-white border-none hover:opacity-90">
+                حفظ التغييرات
+            </button>
+        </form>
+    </div>
+
+    <!-- Account Info -->
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">معلومات الحساب</h2>
+
+        <div class="space-y-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">اسم المستخدم</span>
+                </label>
+                <input type="text"
+                       value="{{ request.user.username }}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">البريد الإلكتروني</span>
+                </label>
+                <input type="text"
+                       value="{{ request.user.email|default:'-' }}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">المالك</span>
+                </label>
+                <input type="text"
+                       value="{{ organization.owner.username }}"
+                       class="input input-bordered w-full bg-gray-100"
+                       disabled>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
