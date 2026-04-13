@@ -19,7 +19,7 @@
 
             <input type="search"
                 placeholder="بحث..."
-                class="input page-search-input w-64"
+                class="bg-dark4 border border-g/20 text-textMain rounded-lg outline-none transition-all focus:border-g focus:ring-2 focus:ring-g/15 px-4 py-2 w-64"
                 name="search"
                 value="{{ search }}" />
             
@@ -30,7 +30,7 @@
             </select>
         </form>
 
-        <button class="btn btn-soft btn-primary"
+        <button class="px-5 py-2.5 rounded-lg text-sm font-bold bg-g text-dark hover:bg-g2 hover:-translate-y-[1px] active:translate-y-0 transition-all flex items-center gap-2 shadow-[0_8px_20px_rgba(0,201,141,0.15)]"
             hx-get="{% url 'subscriptions:new_plan' %}"
             hx-target="#main-content"
             hx-swap="beforeend">
@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+<div class="overflow-x-auto rounded-box border border-g/10 bg-dark3">
 
     <table class="table" id="table-plans">
         <thead>
@@ -70,14 +70,14 @@
                 <td>{{ plan.description|default:"-" }}</td>
                 <td>
                     <div class="flex items-center gap-3">
-                        <button class="btn btn-ghost btn-sm text-blue-500 hover:bg-blue-500/10 hover:text-blue-600 transition-colors"
+                        <button class="btn btn-ghost btn-sm text-g hover:bg-g/10 hover:text-g2 transition-colors"
                             hx-get="{% url 'subscriptions:edit_plan' plan.id %}"
                             hx-target="#main-content"
                             hx-swap="beforeend"
                             title="تعديل">
                             <i data-lucide="edit" class="w-4 h-4"></i>
                         </button>
-                        <button class="btn btn-ghost btn-sm text-red-500 hover:bg-red-500/10 hover:text-red-600 transition-colors"
+                        <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-400/10 hover:text-red-500 transition-colors"
                             hx-delete="{% url 'subscriptions:delete_plan' plan.id %}"
                             hx-confirm="هل أنت متأكد من حذف الباقة؟ لن تستطيع التراجع عن هذه الخطوة."
                             hx-swap="none"
