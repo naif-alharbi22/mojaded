@@ -184,9 +184,11 @@ def verify_code_view(request):
 
 
 def reset_password_view(request):
+    #TODO : add meddile to check if code is valid and not expired, if not redirect to forgot password with error message
     if request.user.is_authenticated:
         return redirect("dashboard:dashboard")
 
+    # understand which user is resetting password based on the code id stored in session from the previous step
     code_id = request.session.get("password_reset_code_id")
     if not code_id:
         return redirect("forgot_password")
