@@ -301,7 +301,11 @@
       {% if messages %}
       <div class="auth-messages">
         {% for message in messages %}
-        <div class="auth-msg-error">{{ message }}</div>
+          {% if message.tags == "success" %}
+            <div style="background:rgba(0,201,141,0.08);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--g);margin-bottom:6px;">{{ message }}</div>
+          {% else %}
+            <div class="auth-msg-error">{{ message }}</div>
+          {% endif %}
         {% endfor %}
       </div>
       {% endif %}
@@ -319,6 +323,12 @@
         <div class="form-group">
           <label class="form-label" for="password">كلمة المرور</label>
           <input id="password" type="password" name="password" class="form-input" placeholder="أدخل كلمة المرور" required>
+        </div>
+
+        <div style="text-align:left;margin-top:-0.5rem;">
+          <a href="{% url 'forgot_password' %}" style="font-size:13px;color:var(--g);font-weight:600;">
+            نسيت كلمة المرور؟
+          </a>
         </div>
 
         {% if form.errors %}
