@@ -53,7 +53,15 @@ class PlatformAccessMiddleware:
         ):
             return self.get_response(request)
 
-        public_paths = {reverse("landing"), reverse("login"), reverse("register"), reverse("account_inactive")}
+        public_paths = {
+            reverse("landing"),
+            reverse("login"),
+            reverse("register"),
+            reverse("forgot_password"),
+            reverse("verify_code"),
+            reverse("reset_password"),
+            reverse("account_inactive"),
+        }
 
         is_app_area = path not in public_paths
 

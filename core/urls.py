@@ -17,7 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from core.views import landing_page, login_view, logout_view, register_view
+from core.views import (
+    landing_page, login_view, logout_view, register_view,
+    forgot_password_view, verify_code_view, reset_password_view,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +28,9 @@ urlpatterns = [
     path("login/", login_view, name="login"),
     path("register/", register_view, name="register"),
     path("logout/", logout_view, name="logout"),
+    path("forgot-password/", forgot_password_view, name="forgot_password"),
+    path("verify-code/", verify_code_view, name="verify_code"),
+    path("reset-password/", reset_password_view, name="reset_password"),
     path("subscriptions/", include("subscriptions.urls")),
     path("dashboard/", include("dashboard.urls")),
     path("billing/", include("billing.urls")),
