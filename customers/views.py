@@ -41,9 +41,7 @@ def new_customer(request):
             customer = form.save(commit=False)
             customer.organization = request.organization
             customer.save()
-            return HttpResponse(
-                "<script>window.dispatchEvent(new Event('customerAdded'));</script>"
-            )
+            return toast_response("تم إنشاء العميل بنجاح", type="success")
     else:
         form = CustomerForm()
 
