@@ -1,0 +1,74 @@
+{% load static %}
+<div class="overflow-x-auto" id="users-table-wrap" hx-trigger="usersChanged from:body" hx-get="{% url 'setting:users_list' %}" hx-target="this" hx-swap="outerHTML">
+    <table class="w-full text-right">
+        <thead class="bg-dark3/50 text-muted uppercase text-[11px] font-bold">
+            <tr>
+                <th class="px-6 py-4">المستخدم</th>
+                <th class="px-6 py-4">البريد</th>
+                <th class="px-6 py-4">الدور</th>
+                <th class="px-6 py-4">الحالة</th>
+                <th class="px-6 py-4 text-left">إجراءات</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-g/5">
+            {% for u in users %}
+            <tr class="hover:bg-g/[2%] transition-colors">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-g/20 text-g flex items-center justify-center font-bold text-xs">
+                            {{ u.username|first|upper }}
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium">
+                                {{ u.username }}
+                                {% if u.id == request.user.id %}<span class="text-muted text-xs">(أنت)</span>{% endif %}
+                            </div>
+                            {% if u.first_name or u.last_name %}
+                            <div class="text-xs text-muted">{{ u.first_name }} {{ u.last_name }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-sm text-muted">{{ u.email|default:"-" }}</td>
+                <td class="px-6 py-4 text-sm text-muted">
+                    {% if u.id == organization.owner_id %}
+                        <span class="px-2 py-1 rounded-full bg-g/10 text-g text-[10px] font-bold border border-g/20">مالك المنشأة</span>
+                    {% elif u.role %}
+                        {{ u.role.name }}
+                    {% else %}
+                        <span class="text-red-400/70">لا يوجد دور</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4">
+                    {% if u.is_active %}
+                    <span class="px-2 py-1 rounded-full bg-g/10 text-g text-[10px] font-bold border border-g/20">نشط</span>
+                    {% else %}
+                    <span class="px-2 py-1 rounded-full bg-red-500/10 text-red-400 text-[10px] font-bold border border-red-500/20">موقوف</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 text-left">
+                    <div class="flex items-center justify-end gap-2">
+                        <button class="btn btn-ghost btn-sm text-g hover:bg-g/10"
+                            hx-get="{% url 'setting:edit_user' u.id %}"
+                            hx-target="#main-content" hx-swap="beforeend"
+                            title="تعديل">
+                            <i data-lucide="edit" class="w-4 h-4"></i>
+                        </button>
+                        {% if u.id != organization.owner_id and u.id != request.user.id %}
+                        <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-400/10"
+                            hx-delete="{% url 'setting:delete_user' u.id %}"
+                            hx-confirm="حذف المستخدم؟ لا يمكن التراجع."
+                            hx-swap="none"
+                            title="حذف">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted py-6">لا يوجد مستخدمون.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

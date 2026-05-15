@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}لا توجد صلاحية{% endblock %}
+
+{% block content %}
+<div class="min-h-[60vh] flex items-center justify-center">
+    <div class="max-w-md w-full mx-auto bg-dark3 border border-red-400/20 rounded-2xl p-8 text-center shadow-2xl">
+
+        <div class="mx-auto w-20 h-20 rounded-full bg-red-400/10 border border-red-400/20 flex items-center justify-center mb-5">
+            <i data-lucide="shield-off" class="w-9 h-9 text-red-400"></i>
+        </div>
+
+        <h1 class="text-2xl font-bold text-textMain mb-2">لا توجد صلاحية</h1>
+        <p class="text-muted mb-1">{{ message|default:"ليس لديك صلاحية للوصول إلى هذه الصفحة" }}</p>
+        {% if permission_label %}
+            <p class="text-xs text-muted mb-6">الصلاحية المطلوبة: <span class="text-red-400">{{ permission_label }}</span></p>
+        {% else %}
+            <div class="mb-6"></div>
+        {% endif %}
+
+        <div class="flex items-center justify-center gap-3">
+            <a href="{% url 'dashboard:dashboard' %}"
+                class="px-5 py-2.5 rounded-lg text-sm font-bold bg-g text-dark hover:bg-g2 transition-all shadow-[0_4px_15px_rgba(0,201,141,0.2)]">
+                العودة للوحة التحكم
+            </a>
+            <button type="button" onclick="history.back()"
+                class="px-5 py-2.5 rounded-lg text-sm font-bold bg-dark4 text-textMain hover:bg-dark2 transition-all border border-g/10">
+                رجوع
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
