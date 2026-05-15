@@ -1,0 +1,82 @@
+{% load static %}
+<dialog id="modal" class="modal modal-open">
+<form method="post"
+      hx-post="{% if role %}{% url 'setting:edit_role' role.id %}{% else %}{% url 'setting:new_role' %}{% endif %}"
+      hx-target="#modal" hx-swap="innerHTML"
+      class="modal-box max-w-3xl p-0 overflow-hidden rounded-2xl bg-dark2 border border-g/20 shadow-2xl">
+    {% csrf_token %}
+
+    <div class="px-6 py-4 border-b border-g/10 flex items-center justify-between bg-dark3">
+        <h3 class="text-base font-bold px-4 py-1.5 rounded-lg bg-[#00c98d]/10 text-[#00c98d] border border-[#00c98d]/20">
+            {% if role %}تعديل دور{% else %}إضافة دور{% endif %}
+        </h3>
+        <button type="button" onclick="closeModal(this)"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <div class="p-6 space-y-5 bg-dark">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="label"><span class="label-text">اسم الدور</span></label>
+                <input type="text" name="name" value="{{ form.name.value|default:'' }}" required
+                       class="input input-bordered w-full" {% if role.is_system %}readonly{% endif %}>
+                {% if form.name.errors %}<span class="text-red-500 text-xs">{{ form.name.errors.0 }}</span>{% endif %}
+            </div>
+            <div>
+                <label class="label"><span class="label-text">الوصف</span></label>
+                <input type="text" name="description" value="{{ form.description.value|default:'' }}"
+                       class="input input-bordered w-full">
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <div class="flex items-center justify-between">
+                <h4 class="text-sm font-bold">الصلاحيات</h4>
+                <div class="text-xs text-muted">
+                    <button type="button" onclick="toggleAllPerms(true)" class="text-g hover:underline">تحديد الكل</button>
+                    <span class="mx-1">·</span>
+                    <button type="button" onclick="toggleAllPerms(false)" class="text-muted hover:underline">إلغاء الكل</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[400px] overflow-y-auto p-1">
+                {% for group in permission_groups %}
+                <div class="bg-dark3 border border-g/10 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-g/10">
+                        <i data-lucide="{{ group.icon }}" class="w-4 h-4 text-g"></i>
+                        <span class="text-sm font-bold">{{ group.label }}</span>
+                    </div>
+                    <div class="space-y-2">
+                        {% for code, label in group.permissions %}
+                        <label class="flex items-center gap-2 cursor-pointer text-xs hover:text-textMain">
+                            <input type="checkbox" name="permissions" value="{{ code }}"
+                                   class="perm-checkbox checkbox checkbox-sm checkbox-success"
+                                   {% if code in selected_permissions %}checked{% endif %}>
+                            <span>{{ label }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if role.is_system %}
+        <div class="text-xs text-muted bg-dark3 p-3 rounded-lg border border-g/10">
+            هذا دور نظام — يمكنك تعديل صلاحياته لكن لا يمكن حذفه أو إعادة تسميته.
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="px-6 py-4 border-t border-g/10 bg-dark3 flex justify-end gap-3">
+        <button type="button" onclick="closeModal(this)" class="px-5 py-2.5 rounded-lg text-sm font-medium text-muted hover:text-textMain">إلغاء</button>
+        <button type="submit" class="px-6 py-2.5 rounded-lg text-sm font-bold bg-g text-dark hover:bg-g2">
+            {% if role %}حفظ{% else %}إنشاء{% endif %}
+        </button>
+    </div>
+</form>
+<script>
+    function toggleAllPerms(checked) {
+        document.querySelectorAll(".perm-checkbox").forEach(cb => cb.checked = checked);
+    }
+</script>
+</dialog>

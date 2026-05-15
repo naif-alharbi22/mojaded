@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load partials %}
+{% load perms %}
 
 {% block title %}الفواتير{% endblock %}
 
@@ -24,6 +25,8 @@
                 value="{{ search }}" />
         </form>
 
+        {% has_perm "billing.create" as can_create_invoice %}
+        {% if can_create_invoice %}
         <button class="px-5 py-2.5 rounded-lg text-sm font-bold bg-g text-dark hover:bg-g2 hover:-translate-y-[1px] active:translate-y-0 transition-all flex items-center gap-2 shadow-[0_8px_20px_rgba(0,201,141,0.15)]"
             hx-get="{% url 'billing:new_invoices' %}"
             hx-target="#main-content"
@@ -31,6 +34,7 @@
             <i data-lucide="plus" class="w-4 h-4"></i>
             إضافة فاتورة جديدة
         </button>
+        {% endif %}
     </div>
 </div>
 
@@ -77,12 +81,15 @@
                     {% endif %}
                 </td>
                 <td>
+                    {% has_perm "billing.edit" as can_edit_invoice %}
+                    {% if can_edit_invoice %}
                     <button
                         hx-get="{% url 'billing:edit_invoice' invoice.id %}"
                         hx-target="#main-content"
                         hx-swap="beforeend">
                         <i data-lucide="edit" class="w-4 h-4"></i>
                     </button>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}
