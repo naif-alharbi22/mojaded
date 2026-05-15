@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "billing",
     "template_partials",
     "setting",
+    "activity",
 ]
 
 

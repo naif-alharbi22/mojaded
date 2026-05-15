@@ -8,6 +8,7 @@ from common.toast_utils import toast_response
 from customers.models import Customer
 from subscriptions.forms import NewSubscriptionForm, PlanForm
 from subscriptions.models import Plan, Subscription
+from activity.services import ActivityLogService
 
 
 def paywall(request):
@@ -78,6 +79,12 @@ def new_subscriptions(request):
             subscription = form.save(commit=False)
             subscription.organization = org
             subscription.save()
+            ActivityLogService.subscription_created(
+                org_id=org.id,
+                subscription=subscription,
+                user=request.user,
+                ip=request.META.get("REMOTE_ADDR"),
+            )
             return toast_response("تم إنشاء الاشتراك بنجاح", type="success")
     else:
         form = NewSubscriptionForm(organization=org, initial={
