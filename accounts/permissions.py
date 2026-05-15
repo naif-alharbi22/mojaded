@@ -183,11 +183,11 @@ def permission_denied_response(request, codename=None, message=None):
             },
             request=request,
         )
-        response = HttpResponse(modal_html + toast_html, status=403)
+        response = HttpResponse(modal_html + toast_html, status=200)
         response["HX-Reswap"] = "none"
         return response
 
-    return render(request, "access_denied.html", context, status=403)
+    return render(request, "access_denied.html", context, status=200)
 
 
 def require_permission(codename):
