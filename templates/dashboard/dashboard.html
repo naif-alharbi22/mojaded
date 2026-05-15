@@ -6,151 +6,196 @@
 
 <h1 class="text-2xl font-bold mb-6">مرحبًا بك {{ request.user.username }} 👋</h1>
 <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-<div class="grid grid-cols-1 md:grid-cols-4 col-span-1 md:col-span-12 gap-6">
-    
-    <!-- Card 1 -->
-    <div class="bg-dark3  shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold mb-4">إجمالي الاشتراكات</h2>
-        <p class="text-3xl font-bold">{{ total_subscriptions }}</p>
-        <p class="text-sm text-muted mt-2">
-            {% if total_subscriptions_delta is None %}
-                لا توجد بيانات للمقارنة
-            {% elif total_subscriptions_delta >= 0 %}
-                زيادة بنسبة {{ total_subscriptions_delta }}% عن الشهر الماضي
-            {% else %}
-                انخفاض بنسبة {{ total_subscriptions_delta|cut:"-" }}% عن الشهر الماضي
-            {% endif %}
-        </p>
+
+  <!-- ── الكروت العليا ── -->
+  <div class="grid grid-cols-1 md:grid-cols-4 col-span-1 md:col-span-12 gap-6">
+
+    <div class="bg-dark3 shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold mb-4">إجمالي الاشتراكات</h2>
+      <p class="text-3xl font-bold">{{ total_subscriptions }}</p>
+      <p class="text-sm text-muted mt-2">
+        {% if total_subscriptions_delta is None %}لا توجد بيانات للمقارنة
+        {% elif total_subscriptions_delta >= 0 %}زيادة بنسبة {{ total_subscriptions_delta }}% عن الشهر الماضي
+        {% else %}انخفاض بنسبة {{ total_subscriptions_delta|cut:"-" }}% عن الشهر الماضي{% endif %}
+      </p>
     </div>
 
-    <!-- Card 2 -->
-    <div class="bg-dark3  shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold mb-4">الإيرادات الشهرية</h2>
-        <p class="text-3xl font-bold">{{ monthly_revenue|floatformat:0 }}</p>
-        <p class="text-sm text-muted mt-2">
-            {% if monthly_revenue_delta is None %}
-                لا توجد بيانات للمقارنة
-            {% elif monthly_revenue_delta >= 0 %}
-                زيادة بنسبة {{ monthly_revenue_delta }}% عن الشهر الماضي
-            {% else %}
-                انخفاض بنسبة {{ monthly_revenue_delta|cut:"-" }}% عن الشهر الماضي
-            {% endif %}
-        </p>
+    <div class="bg-dark3 shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold mb-4">الإيرادات الشهرية</h2>
+      <p class="text-3xl font-bold">{{ monthly_revenue|floatformat:0 }}</p>
+      <p class="text-sm text-muted mt-2">
+        {% if monthly_revenue_delta is None %}لا توجد بيانات للمقارنة
+        {% elif monthly_revenue_delta >= 0 %}زيادة بنسبة {{ monthly_revenue_delta }}% عن الشهر الماضي
+        {% else %}انخفاض بنسبة {{ monthly_revenue_delta|cut:"-" }}% عن الشهر الماضي{% endif %}
+      </p>
     </div>
 
-    <!-- Card 3 -->
-    <div class="bg-dark3  shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold mb-4">العملاء النشطين</h2>
-        <p class="text-3xl font-bold">{{ active_customers }}</p>
-        <p class="text-sm text-muted mt-2">
-            {% if active_customers_delta is None %}
-                لا توجد بيانات للمقارنة
-            {% elif active_customers_delta >= 0 %}
-                زيادة بنسبة {{ active_customers_delta }}% عن الشهر الماضي
-            {% else %}
-                انخفاض بنسبة {{ active_customers_delta|cut:"-" }}% عن الشهر الماضي
-            {% endif %}
-        </p>
+    <div class="bg-dark3 shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold mb-4">العملاء النشطين</h2>
+      <p class="text-3xl font-bold">{{ active_customers }}</p>
+      <p class="text-sm text-muted mt-2">
+        {% if active_customers_delta is None %}لا توجد بيانات للمقارنة
+        {% elif active_customers_delta >= 0 %}زيادة بنسبة {{ active_customers_delta }}% عن الشهر الماضي
+        {% else %}انخفاض بنسبة {{ active_customers_delta|cut:"-" }}% عن الشهر الماضي{% endif %}
+      </p>
     </div>
-    <div class="bg-dark3  shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold mb-4">إشتراكات الشهر الحالي</h2>
-        <p class="text-3xl font-bold">{{ current_month_subs }}</p>
-        <p class="text-sm text-muted mt-2">
-            {% if current_month_subs_delta is None %}
-                لا توجد بيانات للمقارنة
-            {% elif current_month_subs_delta >= 0 %}
-                زيادة بنسبة {{ current_month_subs_delta }}% عن الشهر الماضي
-            {% else %}
-                انخفاض بنسبة {{ current_month_subs_delta|cut:"-" }}% عن الشهر الماضي
-            {% endif %}
-        </p>
-    </div>
-</div>
-<div class=" col-span-1 md:col-span-6 gap-6">
-<div
-                class="flex-col items-center justify-center gap-6 p-4 bg-dark3 border rounded-lg shadow-sm col-span-full lg:col-span-7 border-g/10 false">
-                <p class="text-base font-medium text-white">الاشتراكات الجديدة خلال آخر 7 أيام</p>
-                <div class=" w-full bg-dark4 my-2"></div>
-                <div class="w-full flex">
-                    <div id="weekly-occupancy" class="w-full"></div>
-                </div>
 
-            </div>
-</div>
-</div>
+    <div class="bg-dark3 shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold mb-4">اشتراكات الشهر الحالي</h2>
+      <p class="text-3xl font-bold">{{ current_month_subs }}</p>
+      <p class="text-sm text-muted mt-2">
+        {% if current_month_subs_delta is None %}لا توجد بيانات للمقارنة
+        {% elif current_month_subs_delta >= 0 %}زيادة بنسبة {{ current_month_subs_delta }}% عن الشهر الماضي
+        {% else %}انخفاض بنسبة {{ current_month_subs_delta|cut:"-" }}% عن الشهر الماضي{% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- ── الصف الثاني: الرسم البياني + سجل الأنشطة ── -->
+  <div class="col-span-1 md:col-span-6">
+    <div class="flex-col items-center justify-center gap-6 p-4 bg-dark3 border rounded-lg shadow-sm border-g/10">
+      <p class="text-base font-medium text-white">الاشتراكات الجديدة خلال آخر 7 أيام</p>
+      <div class="w-full bg-dark4 my-2"></div>
+      <div class="w-full flex">
+        <div id="weekly-occupancy" class="w-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── سجل الأنشطة ── -->
+  <div class="col-span-1 md:col-span-6">
+    <div class="bg-dark3 border border-g/10 rounded-lg shadow-sm h-full flex flex-col">
+
+      <!-- رأس البطاقة -->
+      <div class="flex items-center justify-between px-5 pt-5 pb-3">
+        <p class="text-base font-medium text-white">آخر الأنشطة</p>
+        <a 
+           class="text-xs text-muted hover:text-white transition-colors">
+          عرض الكل ←
+        </a>
+      </div>
+      <div class="w-full border-t border-g/10 mb-1"></div>
+
+      <!-- قائمة الأنشطة -->
+      <ul class="divide-y divide-white/5 flex-1 overflow-hidden px-2 pb-3">
+
+        {% for log in recent_logs %}
+        <li class="flex items-start gap-3 py-3 px-3 rounded-lg hover:bg-white/5 transition-colors">
+
+          <!-- أيقونة النوع -->
+          <div class="activity-icon activity-icon--{{ log.action }} mt-0.5 shrink-0">
+            {% if log.action == "created" and log.entity_type == "client" %}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            {% elif log.action == "created" %}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            {% elif log.action == "renewed" %}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            {% elif log.action == "expired" %}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {% elif log.action == "updated" %}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            {% else %}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            {% endif %}
+          </div>
+
+          <!-- النص -->
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-white leading-snug">
+              {% if log.action == "created" and log.entity_type == "subscription" %}
+                أضاف اشتراك جديد لـ <span class="font-medium">{{ log.metadata.client_name|default:"—" }}</span>
+                {% if log.metadata.value %}
+                  <span class="text-muted text-xs mr-1">· {{ log.metadata.value }} ريال</span>
+                {% endif %}
+              {% elif log.action == "created" and log.entity_type == "client" %}
+                أضاف عميل جديد <span class="font-medium">{{ log.metadata.client_name|default:"—" }}</span>
+              {% elif log.action == "renewed" %}
+                جدّد اشتراك <span class="font-medium">{{ log.metadata.client_name|default:"—" }}</span>
+              {% elif log.action == "expired" %}
+                انتهى اشتراك <span class="font-medium">{{ log.metadata.client_name|default:"—" }}</span>
+              {% elif log.action == "updated" %}
+                عدّل اشتراك <span class="font-medium">{{ log.metadata.client_name|default:"—" }}</span>
+              {% elif log.action == "cancelled" %}
+                ألغى اشتراك <span class="font-medium">{{ log.metadata.client_name|default:"—" }}</span>
+              {% else %}
+                {{ log.get_action_display }} — {{ log.get_entity_type_display }}
+              {% endif %}
+            </p>
+            <p class="text-xs text-muted mt-0.5">
+              {% if log.user %}{{ log.user.get_full_name|default:log.user.email }}{% else %}النظام{% endif %}
+              · {{ log.created_at|timesince }} مضت
+            </p>
+          </div>
+
+          <!-- badge النوع -->
+          <span class="activity-badge activity-badge--{{ log.action }} shrink-0 self-center">
+            {{ log.get_action_display }}
+          </span>
+
+        </li>
+        {% empty %}
+        <li class="py-10 text-center text-sm text-muted">لا توجد أنشطة بعد</li>
+        {% endfor %}
+
+      </ul>
+    </div>
+  </div>
+
+</div><!-- end grid -->
 
 {{ weekly_chart|json_script:"weekly-chart-data" }}
 
+<style>
+  /* ── أيقونات الأنشطة ── */
+  .activity-icon {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .activity-icon--created   { background: rgba(0,201,141,.15); color: #00c98d; }
+  .activity-icon--renewed   { background: rgba(139,92,246,.15); color: #a78bfa; }
+  .activity-icon--expired   { background: rgba(239,68,68,.15);  color: #f87171; }
+  .activity-icon--updated   { background: rgba(59,130,246,.15); color: #60a5fa; }
+  .activity-icon--cancelled { background: rgba(245,158,11,.15); color: #fbbf24; }
+
+  /* ── badges ── */
+  .activity-badge {
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .activity-badge--created   { background: rgba(0,201,141,.15);  color: #00c98d; }
+  .activity-badge--renewed   { background: rgba(139,92,246,.15); color: #a78bfa; }
+  .activity-badge--expired   { background: rgba(239,68,68,.15);  color: #f87171; }
+  .activity-badge--updated   { background: rgba(59,130,246,.15); color: #60a5fa; }
+  .activity-badge--cancelled { background: rgba(245,158,11,.15); color: #fbbf24; }
+</style>
+
 <script type="module">
 import ApexCharts from "https://cdn.jsdelivr.net/npm/apexcharts/+esm";
-
 const isRTL = true;
-
 (function () {
-
-    const weeklyOccupancy = document.getElementById("weekly-occupancy");
-    if (!weeklyOccupancy) return;
-
-    const weeklyData = JSON.parse(document.getElementById("weekly-chart-data").textContent);
-
-    const weeklyDataCategories = weeklyData.map(d => d.label);
-    const weeklyDataValues = weeklyData.map(d => d.value);
-    const maxValue = Math.max(1, ...weeklyDataValues);
-
-    const weeklyOccupancyChart = new ApexCharts(weeklyOccupancy, {
-        chart: {
-            type: "bar",
-            background: "transparent",
-            toolbar: { show: false }
-        },
-
-        theme: { mode: "dark" },
-
-        series: [{
-            name: "اشتراك جديد",
-            data: weeklyDataValues
-        }],
-
-        xaxis: {
-            categories: weeklyDataCategories,
-            labels: { style: { fontSize: "12px", colors: "#5d8070" } }
-        },
-
-        yaxis: {
-            min: 0,
-            max: maxValue,
-            opposite: isRTL,
-            tickAmount: Math.min(maxValue, 4),
-            labels: {
-                formatter: val => Math.round(val),
-                style: { colors: "#5d8070" }
-            }
-        },
-
-        plotOptions: {
-            bar: {
-                columnWidth: "45%",
-                borderRadius: 6
-            }
-        },
-
-        colors: ["#00c98d"],
-
-        grid: {
-            borderColor: "rgba(0,201,141,0.10)",
-            strokeDashArray: 4
-        },
-
-        tooltip: {
-            theme: "dark",
-            y: { formatter: val => val }
-        },
-
-        dataLabels: { enabled: false }
-    });
-
-    weeklyOccupancyChart.render();
-
+  const weeklyOccupancy = document.getElementById("weekly-occupancy");
+  if (!weeklyOccupancy) return;
+  const weeklyData = JSON.parse(document.getElementById("weekly-chart-data").textContent);
+  const weeklyDataCategories = weeklyData.map(d => d.label);
+  const weeklyDataValues = weeklyData.map(d => d.value);
+  const maxValue = Math.max(1, ...weeklyDataValues);
+  new ApexCharts(weeklyOccupancy, {
+    chart: { type: "bar", background: "transparent", toolbar: { show: false } },
+    theme: { mode: "dark" },
+    series: [{ name: "اشتراك جديد", data: weeklyDataValues }],
+    xaxis: { categories: weeklyDataCategories, labels: { style: { fontSize: "12px", colors: "#5d8070" } } },
+    yaxis: { min: 0, max: maxValue, opposite: isRTL, tickAmount: Math.min(maxValue, 4), labels: { formatter: val => Math.round(val), style: { colors: "#5d8070" } } },
+    plotOptions: { bar: { columnWidth: "45%", borderRadius: 6 } },
+    colors: ["#00c98d"],
+    grid: { borderColor: "rgba(0,201,141,0.10)", strokeDashArray: 4 },
+    tooltip: { theme: "dark", y: { formatter: val => val } },
+    dataLabels: { enabled: false }
+  }).render();
 })();
 </script>
 

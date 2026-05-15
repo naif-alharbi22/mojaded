@@ -5,6 +5,7 @@ from django.db.models import Count, Sum
 from django.shortcuts import render
 from django.utils import timezone
 
+from activity.models import ActivityLog
 from billing.models import Invoice
 from customers.models import Customer
 from subscriptions.models import Subscription
@@ -67,6 +68,13 @@ def view_dashboard(request):
         .values("created_at__date")
         .annotate(c=Count("id"))
     }
+    recent_logs = (
+        ActivityLog.objects
+        .filter(org_id=org.id)
+        .select_related("user")
+        [:8]  # آخر 8 أنشطة بس
+    )
+
     weekly_chart = [
         {
             "label": WEEKDAY_NAMES_AR[(week_start + timedelta(days=i)).weekday()],
@@ -76,6 +84,7 @@ def view_dashboard(request):
     ]
 
     context = {
+        "recent_logs": recent_logs,
         "total_subscriptions": total_subscriptions,
         "total_subscriptions_delta": _pct_change(total_subscriptions, total_subscriptions_last),
         "monthly_revenue": monthly_revenue,
