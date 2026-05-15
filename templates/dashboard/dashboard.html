@@ -11,33 +11,65 @@
     <!-- Card 1 -->
     <div class="bg-dark3  shadow rounded-lg p-6">
         <h2 class="text-lg font-semibold mb-4">إجمالي الاشتراكات</h2>
-        <p class="text-3xl font-bold">150</p>
-        <p class="text-sm text-muted mt-2">زيادة بنسبة 10% عن الشهر الماضي</p>
+        <p class="text-3xl font-bold">{{ total_subscriptions }}</p>
+        <p class="text-sm text-muted mt-2">
+            {% if total_subscriptions_delta is None %}
+                لا توجد بيانات للمقارنة
+            {% elif total_subscriptions_delta >= 0 %}
+                زيادة بنسبة {{ total_subscriptions_delta }}% عن الشهر الماضي
+            {% else %}
+                انخفاض بنسبة {{ total_subscriptions_delta|cut:"-" }}% عن الشهر الماضي
+            {% endif %}
+        </p>
     </div>
 
     <!-- Card 2 -->
     <div class="bg-dark3  shadow rounded-lg p-6">
         <h2 class="text-lg font-semibold mb-4">الإيرادات الشهرية</h2>
-        <p class="text-3xl font-bold">$12,000</p>
-        <p class="text-sm text-muted mt-2">زيادة بنسبة 15% عن الشهر الماضي</p>
+        <p class="text-3xl font-bold">{{ monthly_revenue|floatformat:0 }}</p>
+        <p class="text-sm text-muted mt-2">
+            {% if monthly_revenue_delta is None %}
+                لا توجد بيانات للمقارنة
+            {% elif monthly_revenue_delta >= 0 %}
+                زيادة بنسبة {{ monthly_revenue_delta }}% عن الشهر الماضي
+            {% else %}
+                انخفاض بنسبة {{ monthly_revenue_delta|cut:"-" }}% عن الشهر الماضي
+            {% endif %}
+        </p>
     </div>
 
     <!-- Card 3 -->
     <div class="bg-dark3  shadow rounded-lg p-6">
         <h2 class="text-lg font-semibold mb-4">العملاء النشطين</h2>
-        <p class="text-3xl font-bold">1200</p>
-        <p class="text-sm text-muted mt-2">زيادة بنسبة 5% عن الشهر الماضي</p>
+        <p class="text-3xl font-bold">{{ active_customers }}</p>
+        <p class="text-sm text-muted mt-2">
+            {% if active_customers_delta is None %}
+                لا توجد بيانات للمقارنة
+            {% elif active_customers_delta >= 0 %}
+                زيادة بنسبة {{ active_customers_delta }}% عن الشهر الماضي
+            {% else %}
+                انخفاض بنسبة {{ active_customers_delta|cut:"-" }}% عن الشهر الماضي
+            {% endif %}
+        </p>
     </div>
     <div class="bg-dark3  shadow rounded-lg p-6">
         <h2 class="text-lg font-semibold mb-4">إشتراكات الشهر الحالي</h2>
-        <p class="text-3xl font-bold">1200</p>
-        <p class="text-sm text-muted mt-2">زيادة بنسبة 5% عن الشهر الماضي</p>
+        <p class="text-3xl font-bold">{{ current_month_subs }}</p>
+        <p class="text-sm text-muted mt-2">
+            {% if current_month_subs_delta is None %}
+                لا توجد بيانات للمقارنة
+            {% elif current_month_subs_delta >= 0 %}
+                زيادة بنسبة {{ current_month_subs_delta }}% عن الشهر الماضي
+            {% else %}
+                انخفاض بنسبة {{ current_month_subs_delta|cut:"-" }}% عن الشهر الماضي
+            {% endif %}
+        </p>
     </div>
 </div>
 <div class=" col-span-1 md:col-span-6 gap-6">
 <div
                 class="flex-col items-center justify-center gap-6 p-4 bg-dark3 border rounded-lg shadow-sm col-span-full lg:col-span-7 border-g/10 false">
-                <p class="text-base font-medium text-white">Weekly Occupancy Movement</p>
+                <p class="text-base font-medium text-white">الاشتراكات الجديدة خلال آخر 7 أيام</p>
                 <div class=" w-full bg-dark4 my-2"></div>
                 <div class="w-full flex">
                     <div id="weekly-occupancy" class="w-full"></div>
@@ -46,28 +78,24 @@
             </div>
 </div>
 </div>
+
+{{ weekly_chart|json_script:"weekly-chart-data" }}
+
 <script type="module">
 import ApexCharts from "https://cdn.jsdelivr.net/npm/apexcharts/+esm";
 
-const isRTL = true; // عشان العربية
+const isRTL = true;
 
 (function () {
 
     const weeklyOccupancy = document.getElementById("weekly-occupancy");
     if (!weeklyOccupancy) return;
 
-    const weeklyData = [
-        { label: "الأحد", percentage: 72 },
-        { label: "الإثنين", percentage: 81 },
-        { label: "الثلاثاء", percentage: 65 },
-        { label: "الأربعاء", percentage: 90 },
-        { label: "الخميس", percentage: 78 },
-        { label: "الجمعة", percentage: 55 },
-        { label: "السبت", percentage: 88 },
-    ];
+    const weeklyData = JSON.parse(document.getElementById("weekly-chart-data").textContent);
 
     const weeklyDataCategories = weeklyData.map(d => d.label);
-    const weeklyDataValues = weeklyData.map(d => d.percentage);
+    const weeklyDataValues = weeklyData.map(d => d.value);
+    const maxValue = Math.max(1, ...weeklyDataValues);
 
     const weeklyOccupancyChart = new ApexCharts(weeklyOccupancy, {
         chart: {
@@ -79,7 +107,7 @@ const isRTL = true; // عشان العربية
         theme: { mode: "dark" },
 
         series: [{
-            name: "مشترك",
+            name: "اشتراك جديد",
             data: weeklyDataValues
         }],
 
@@ -90,11 +118,11 @@ const isRTL = true; // عشان العربية
 
         yaxis: {
             min: 0,
-            max: 100,
+            max: maxValue,
             opposite: isRTL,
-            tickAmount: 4,
+            tickAmount: Math.min(maxValue, 4),
             labels: {
-                formatter: val => val,
+                formatter: val => Math.round(val),
                 style: { colors: "#5d8070" }
             }
         },
