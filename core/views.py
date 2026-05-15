@@ -33,7 +33,7 @@ def login_view(request):
         organization = getattr(user, "organization", None)
         if organization and organization.status != "active":
             messages.error(request, "حساب مؤسستك غير مفعّل")
-            return redirect("account_inactive")
+            return redirect("subscriptions:account_inactive")
 
         login(request, user)
 

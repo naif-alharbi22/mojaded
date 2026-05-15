@@ -29,12 +29,12 @@ class OrganizationAccessMiddleware:
             if organization and organization.status != "active":
 
                 allowed_paths = [
-                    reverse("account_inactive"),
+                    reverse("subscriptions:account_inactive"),
                     reverse("logout"),
                 ]
 
                 if request.path not in allowed_paths:
-                    return redirect("account_inactive")
+                    return redirect("subscriptions:account_inactive")
 
         return self.get_response(request)
 
@@ -60,7 +60,7 @@ class PlatformAccessMiddleware:
             reverse("forgot_password"),
             reverse("verify_code"),
             reverse("reset_password"),
-            reverse("account_inactive"),
+            reverse("subscriptions:account_inactive"),
         }
 
         is_app_area = path not in public_paths
@@ -71,11 +71,7 @@ class PlatformAccessMiddleware:
 
             organization = getattr(request.user, "organization", None)
             if organization and organization.status != "active":
-                return redirect("account_inactive")
-
-        else:
-            if path not in public_paths :
-                return redirect("login")
+                return redirect("subscriptions:account_inactive")
 
         return self.get_response(request)
     
