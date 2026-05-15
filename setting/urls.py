@@ -1,8 +1,21 @@
 from django.urls import path
-import setting.views as setting_views
+
+from . import views
 
 app_name = "setting"
 
 urlpatterns = [
-    path("", setting_views.view_settings, name="view_settings"),
+    path("", views.view_settings, name="view_settings"),
+
+    # Users
+    path("users/", views.users_list, name="users_list"),
+    path("users/new/", views.new_user, name="new_user"),
+    path("users/<int:user_id>/edit/", views.edit_user, name="edit_user"),
+    path("users/<int:user_id>/delete/", views.delete_user, name="delete_user"),
+
+    # Roles
+    path("roles/", views.roles_list, name="roles_list"),
+    path("roles/new/", views.new_role, name="new_role"),
+    path("roles/<int:role_id>/edit/", views.edit_role, name="edit_role"),
+    path("roles/<int:role_id>/delete/", views.delete_role, name="delete_role"),
 ]

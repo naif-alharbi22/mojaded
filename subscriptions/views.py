@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 
+from accounts.permissions import permission_denied_response, require_permission
 from common.toast_utils import toast_response
 from customers.models import Customer
 from subscriptions.forms import NewSubscriptionForm, PlanForm
@@ -17,6 +18,7 @@ def account_inactive(request):
     return render(request, "account_inactive.html")
 
 
+@require_permission("subscriptions.view")
 def subscriptions(request):
     subs = Subscription.objects.for_org(request.organization).select_related("customer", "plan")
 
@@ -41,6 +43,7 @@ def subscriptions(request):
     return render(request, "subscription/index.html", context)
 
 
+@require_permission("plans.view")
 def plans_view(request):
     plans = Plan.objects.for_org(request.organization)
 
@@ -65,6 +68,7 @@ def plans_view(request):
     return render(request, "plans/index.html", context)
 
 
+@require_permission("subscriptions.create")
 def new_subscriptions(request):
     org = request.organization
 
@@ -94,6 +98,7 @@ def new_subscriptions(request):
     return render(request, "subscription/modal.html", context)
 
 
+@require_permission("plans.create")
 def new_plan(request):
     if request.method == "POST":
         form = PlanForm(request.POST)
@@ -108,8 +113,11 @@ def new_plan(request):
     return render(request, "plans/modal.html", {"form": form})
 
 
+@require_permission("plans.edit")
 def edit_plan(request, plan_id):
-    plan = Plan.objects.for_org(request.organization).get(id=plan_id)
+    plan = Plan.objects.for_org(request.organization).filter(id=plan_id).first()
+    if plan is None:
+        return permission_denied_response(request, "plans.edit")
 
     if request.method == "POST":
         form = PlanForm(request.POST, instance=plan)
@@ -122,9 +130,12 @@ def edit_plan(request, plan_id):
     return render(request, "plans/modal.html", {"form": form, "plan": plan})
 
 
+@require_permission("subscriptions.edit")
 def edit_subscription(request, subscription_id):
     org = request.organization
-    subscription = Subscription.objects.for_org(org).get(id=subscription_id)
+    subscription = Subscription.objects.for_org(org).filter(id=subscription_id).first()
+    if subscription is None:
+        return permission_denied_response(request, "subscriptions.edit")
 
     if request.method == "POST":
         form = NewSubscriptionForm(request.POST, instance=subscription, organization=org)
@@ -147,14 +158,20 @@ def edit_subscription(request, subscription_id):
 
 
 @require_http_methods(["DELETE"])
+@require_permission("subscriptions.delete")
 def delete_subscription(request, subscription_id):
-    subscription = Subscription.objects.for_org(request.organization).get(id=subscription_id)
+    subscription = Subscription.objects.for_org(request.organization).filter(id=subscription_id).first()
+    if subscription is None:
+        return permission_denied_response(request, "subscriptions.delete")
     subscription.delete()
     return toast_response("تم حذف الاشتراك بنجاح", type="success")
 
 
 @require_http_methods(["DELETE"])
+@require_permission("plans.delete")
 def delete_plan(request, plan_id):
-    plan = Plan.objects.for_org(request.organization).get(id=plan_id)
+    plan = Plan.objects.for_org(request.organization).filter(id=plan_id).first()
+    if plan is None:
+        return permission_denied_response(request, "plans.delete")
     plan.delete()
     return toast_response("تم حذف الباقة بنجاح", type="success")

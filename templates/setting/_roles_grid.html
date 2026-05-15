@@ -1,0 +1,44 @@
+{% load static %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="roles-grid-wrap"
+     hx-trigger="rolesChanged from:body" hx-get="{% url 'setting:roles_list' %}" hx-target="this" hx-swap="outerHTML">
+    {% for role in roles %}
+    <div class="bg-dark2 border border-g/10 p-6 rounded-2xl hover:border-g/30 transition-all group">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-g/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i data-lucide="{% if role.is_system %}shield-check{% else %}shield{% endif %}" class="w-6 h-6 text-g"></i>
+            </div>
+            {% if role.is_system %}
+            <span class="text-[10px] px-2 py-1 rounded-full bg-g/10 text-g border border-g/20 font-bold">نظام</span>
+            {% endif %}
+        </div>
+        <h3 class="font-bold mb-2">{{ role.name }}</h3>
+        <p class="text-xs text-muted mb-4 min-h-[2.5rem]">{{ role.description|default:"—" }}</p>
+        <div class="flex items-center justify-between text-[11px]">
+            <span class="text-muted">{{ role.user_count }} مستخدم · {{ role.permissions|length }} صلاحية</span>
+            <div class="flex items-center gap-3">
+                <button class="text-xs text-g hover:underline"
+                    hx-get="{% url 'setting:edit_role' role.id %}"
+                    hx-target="#main-content" hx-swap="beforeend">
+                    تعديل
+                </button>
+                {% if not role.is_system %}
+                <button class="text-xs text-red-400 hover:underline"
+                    hx-delete="{% url 'setting:delete_role' role.id %}"
+                    hx-confirm="حذف الدور؟"
+                    hx-swap="none">
+                    حذف
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <button class="bg-dark2 border border-g/10 p-6 rounded-2xl border-dashed flex flex-col items-center justify-center text-center opacity-60 hover:opacity-100 transition-opacity cursor-pointer min-h-[200px]"
+            hx-get="{% url 'setting:new_role' %}" hx-target="#main-content" hx-swap="beforeend">
+        <div class="w-10 h-10 border border-g/30 rounded-full flex items-center justify-center mb-2">
+            <span class="text-xl text-g font-light">+</span>
+        </div>
+        <span class="text-sm font-medium">إضافة دور جديد</span>
+    </button>
+</div>

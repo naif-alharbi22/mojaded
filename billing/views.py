@@ -2,12 +2,14 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Q
 
+from accounts.permissions import permission_denied_response, require_permission
 from common.toast_utils import toast_response
 from billing.forms import InvoiceForm
 from billing.models import Invoice
 from subscriptions.models import Subscription
 
 
+@require_permission("billing.view")
 def billing_view(request):
     invoices = Invoice.objects.for_org(request.organization).select_related(
         "subscription", "subscription__customer"
@@ -31,6 +33,7 @@ def billing_view(request):
     return render(request, "billing/index.html", context)
 
 
+@require_permission("billing.create")
 def new_invoice(request):
     org = request.organization
 
@@ -58,9 +61,12 @@ def new_invoice(request):
     })
 
 
+@require_permission("billing.edit")
 def edit_invoice(request, invoice_id):
     org = request.organization
-    invoice = Invoice.objects.for_org(org).get(id=invoice_id)
+    invoice = Invoice.objects.for_org(org).filter(id=invoice_id).first()
+    if invoice is None:
+        return permission_denied_response(request, "billing.edit")
 
     if request.method == "POST":
         form = InvoiceForm(request.POST, instance=invoice, organization=org)

@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from billing.models import Invoice
 from django.utils import timezone
 from common.managers import TenantManager
+from django.utils.translation import gettext as _
 
 
 class Plan(models.Model):
@@ -39,17 +40,17 @@ class Subscription(models.Model):
     objects = TenantManager()
 
     STATUS_CHOICES = [
-    ("pending", "Pending"),
-    ("active", "Active"),        
-    ("past_due", "Past Due"),
-    ("trial", "Trial"), 
-    ("paused", "Paused"),
-    ("cancelled", "Cancelled"), 
-    ("expired", "Expired"),        
+    ("pending", _("Pending")),
+    ("active", _("Active")),        
+    ("past_due", _("Past Due")),
+    ("trial", _("Trial")), 
+    ("paused", _("Paused")),
+    ("cancelled", _("Cancelled")), 
+    ("expired", _("Expired")),        
 ]
     TYPE_CHOICES = [
-        ("yearly", "Yearly"),
-        ("monthly", "Monthly"),
+        ("yearly", _("Yearly")),
+        ("monthly", _("Monthly")),
     ]
     organization = models.ForeignKey(
         Organization,

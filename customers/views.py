@@ -4,11 +4,13 @@ from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q
 
+from accounts.permissions import permission_denied_response, require_permission
 from common.toast_utils import toast_response
 from customers.forms import CustomerForm
 from customers.models import Customer
 
 
+@require_permission("customers.view")
 def customers_view(request):
     customers = Customer.objects.for_org(request.organization)
 
@@ -31,6 +33,7 @@ def customers_view(request):
     return render(request, "customers/index.html", context)
 
 
+@require_permission("customers.create")
 def new_customer(request):
     if request.method == "POST":
         form = CustomerForm(request.POST)
@@ -47,8 +50,11 @@ def new_customer(request):
     return render(request, "customers/modal.html", {"form": form})
 
 
+@require_permission("customers.edit")
 def edit_customer(request, customer_id):
-    customer = Customer.objects.for_org(request.organization).get(id=customer_id)
+    customer = Customer.objects.for_org(request.organization).filter(id=customer_id).first()
+    if customer is None:
+        return permission_denied_response(request, "customers.edit")
 
     if request.method == "POST":
         form = CustomerForm(request.POST, instance=customer)
@@ -62,7 +68,10 @@ def edit_customer(request, customer_id):
 
 
 @require_http_methods(["DELETE"])
+@require_permission("customers.delete")
 def delete_customer(request, customer_id):
-    customer = Customer.objects.for_org(request.organization).get(id=customer_id)
+    customer = Customer.objects.for_org(request.organization).filter(id=customer_id).first()
+    if customer is None:
+        return permission_denied_response(request, "customers.delete")
     customer.delete()
     return toast_response("تم حذف العميل بنجاح", type="success")
