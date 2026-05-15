@@ -25,8 +25,45 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Django system checks
+        run: python manage.py check
+
       - name: Run migrations
         run: python manage.py migrate --noinput
 
       - name: Run tests
         run: python manage.py test
+
+      - name: Start server
+        run: |
+          python manage.py runserver 127.0.0.1:8000 --noreload &
+          echo $! > server.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8000/ -o /dev/null; then
+              echo "Server is up"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Server failed to start"
+          exit 1
+
+      - name: Smoke test key pages
+        run: |
+          set -e
+          for path in / /login/ /register/ /forgot-password/; do
+            echo "Checking $path"
+            status=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:8000$path")
+            if [ "$status" -ge 400 ]; then
+              echo "FAIL: $path returned $status"
+              exit 1
+            fi
+            echo "OK: $path returned $status"
+          done
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill $(cat server.pid) || true
+          fi
