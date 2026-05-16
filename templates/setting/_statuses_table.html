@@ -1,0 +1,62 @@
+{% load static %}
+<div class="overflow-x-auto" id="statuses-table-wrap" hx-trigger="statusesChanged from:body" hx-get="{% url 'setting:statuses_list' %}" hx-target="this" hx-swap="outerHTML">
+    <table class="w-full text-right">
+        <thead class="bg-dark3/50 text-muted uppercase text-[11px] font-bold">
+            <tr>
+                <th class="px-6 py-4">الحالة</th>
+                <th class="px-6 py-4">النطاق</th>
+                <th class="px-6 py-4">افتراضية</th>
+                <th class="px-6 py-4 text-left">إجراءات</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-g/5">
+            {% for s in subscription_statuses %}
+            <tr class="hover:bg-g/[2%] transition-colors">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-g"></span>
+                        <span class="text-sm font-medium">{{ s.name }}</span>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    {% if s.Organization_id %}
+                        <span class="px-2 py-1 rounded-full bg-g/10 text-g text-[10px] font-bold border border-g/20">خاصة بالمنشأة</span>
+                    {% else %}
+                        <span class="px-2 py-1 rounded-full bg-white/5 text-muted text-[10px] font-bold border border-white/10">عامة</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4">
+                    {% if s.is_default %}
+                    <span class="px-2 py-1 rounded-full bg-g/10 text-g text-[10px] font-bold border border-g/20">افتراضية</span>
+                    {% else %}
+                    <span class="text-muted text-xs">—</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 text-left">
+                    <div class="flex items-center justify-end gap-2">
+                        {% if s.Organization_id %}
+                        <button class="btn btn-ghost btn-sm text-g hover:bg-g/10"
+                            hx-get="{% url 'setting:edit_status' s.id %}"
+                            hx-target="#main-content" hx-swap="beforeend"
+                            title="تعديل">
+                            <i data-lucide="edit" class="w-4 h-4"></i>
+                        </button>
+                        <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-400/10"
+                            hx-delete="{% url 'setting:delete_status' s.id %}"
+                            hx-confirm="حذف الحالة؟ لا يمكن التراجع."
+                            hx-swap="none"
+                            title="حذف">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                        {% else %}
+                        <span class="text-muted text-xs">حالة نظام</span>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted py-8">لا توجد حالات.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

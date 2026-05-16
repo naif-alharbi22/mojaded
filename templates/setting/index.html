@@ -30,9 +30,9 @@
                     <i data-lucide="sliders" class="w-4 h-4"></i>
                     <span>إعدادات متقدمة</span>
                 </button>
-                <button onclick="switchTab('billing')" data-tab="billing" class="settings-tab flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap text-muted hover:bg-g/5 hover:text-textMain">
-                    <i data-lucide="receipt" class="w-4 h-4"></i>
-                    <span>الفواتير والاشتراك</span>
+                <button onclick="switchTab('subscription-statuses')" data-tab="subscription-statuses" class="settings-tab flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap text-muted hover:bg-g/5 hover:text-textMain">
+                    <i data-lucide="flag" class="w-4 h-4"></i>
+                    <span>حالات الأشتراك</span>
                 </button>
             </nav>
         </aside>
@@ -171,6 +171,24 @@
                             <button class="btn btn-sm btn-outline btn-error opacity-60 hover:opacity-100">حذف جميع البيانات</button>
                         </div>
                     </div>
+                </div>
+            </div>
+            <!-- Subscription Statuses Tab -->
+            <div id="tab-subscription-statuses" class="settings-content hidden space-y-6 animate-in fade-in duration-300">
+                <div class="bg-dark2 border border-g/10 rounded-2xl overflow-hidden shadow-sm">
+                    <div class="p-6 border-b border-g/10 flex justify-between items-center bg-black/10">
+                        <div>
+                            <h2 class="text-lg font-bold">حالات الاشتراك</h2>
+                            <p class="text-sm text-muted">الحالات التي يمكن تعيينها لاشتراكات العملاء</p>
+                        </div>
+                        <button class="btn btn-sm bg-g/10 text-g border border-g/20 hover:bg-g hover:text-dark"
+                                hx-get="{% url 'setting:new_status' %}"
+                                hx-target="#main-content"
+                                hx-swap="beforeend">
+                            + إضافة حالة
+                        </button>
+                    </div>
+                    {% include "setting/_statuses_table.html" %}
                 </div>
             </div>
 

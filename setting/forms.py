@@ -3,6 +3,7 @@ from django import forms
 from accounts.models import Role, User
 from accounts.permissions import ALL_PERMISSIONS
 from organizations.models import Organization
+from subscriptions.models import SubscriptionStatus
 
 
 class OrganizationForm(forms.ModelForm):
@@ -95,3 +96,31 @@ class RoleForm(forms.ModelForm):
         if commit:
             role.save()
         return role
+
+
+class SubscriptionStatusForm(forms.ModelForm):
+    class Meta:
+        model = SubscriptionStatus
+        fields = ["name", "is_default"]
+
+    def __init__(self, *args, organization=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.organization = organization
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not name:
+            raise forms.ValidationError("الاسم مطلوب")
+        qs = SubscriptionStatus.objects.filter(name__iexact=name)
+        if self.instance and self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise forms.ValidationError("يوجد حالة بنفس الاسم")
+        return name
+
+    def save(self, commit=True):
+        status = super().save(commit=False)
+        status.Organization = self.organization
+        if commit:
+            status.save()
+        return status

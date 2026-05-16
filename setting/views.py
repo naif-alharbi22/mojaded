@@ -16,7 +16,9 @@ from accounts.permissions import (
     require_permission,
 )
 from common.toast_utils import toast_response
-from setting.forms import EditUserForm, NewUserForm, OrganizationForm, RoleForm
+from setting.forms import EditUserForm, NewUserForm, OrganizationForm, RoleForm, SubscriptionStatusForm
+from subscriptions.models import SubscriptionStatus
+from django.db.models import Q
 
 
 # ---------- helpers ----------
@@ -37,6 +39,14 @@ def _roles_qs(organization):
         Role.objects.filter(organization=organization)
         .annotate(user_count=Count("users"))
         .order_by("-is_system", "name")
+    )
+
+
+def _statuses_qs(organization):
+    return (
+        SubscriptionStatus.objects
+        .filter(Q(Organization=organization) | Q(Organization__isnull=True))
+        .order_by("-is_default", "name")
     )
 
 
@@ -61,6 +71,7 @@ def view_settings(request):
 
     users = _users_qs(org)
     roles = _roles_qs(org)
+    subscription_statuses = _statuses_qs(org)
 
     return render(request, "setting/index.html", {
         "form": form,
@@ -68,6 +79,7 @@ def view_settings(request):
         "users": users,
         "roles": roles,
         "permission_groups": PERMISSION_GROUPS,
+        "subscription_statuses": subscription_statuses,
     })
 
 
@@ -239,3 +251,66 @@ def delete_role(request, role_id):
 
     role.delete()
     return toast_response("تم حذف الدور بنجاح", type="success", name_trigger="rolesChanged")
+
+
+# ---------- subscription statuses ----------
+
+@require_permission("settings.view")
+def statuses_list(request):
+    org = request.organization
+    statuses = _statuses_qs(org)
+    return render(request, "setting/_statuses_table.html", {
+        "subscription_statuses": statuses,
+    })
+
+
+@require_permission("settings.edit")
+def new_status(request):
+    org = request.organization
+
+    if request.method == "POST":
+        form = SubscriptionStatusForm(request.POST, organization=org)
+        if form.is_valid():
+            form.save()
+            return toast_response("تم إنشاء الحالة بنجاح", type="success", name_trigger="statusesChanged")
+    else:
+        form = SubscriptionStatusForm(organization=org)
+
+    return render(request, "setting/_status_modal.html", {
+        "form": form,
+    })
+
+
+@require_permission("settings.edit")
+def edit_status(request, status_id):
+    org = request.organization
+    status = SubscriptionStatus.objects.filter(id=status_id, Organization=org).first()
+    if status is None:
+        return permission_denied_response(request, "settings.edit")
+
+    if request.method == "POST":
+        form = SubscriptionStatusForm(request.POST, instance=status, organization=org)
+        if form.is_valid():
+            form.save()
+            return toast_response("تم تحديث الحالة بنجاح", type="success", name_trigger="statusesChanged")
+    else:
+        form = SubscriptionStatusForm(instance=status, organization=org)
+
+    return render(request, "setting/_status_modal.html", {
+        "form": form,
+        "status": status,
+    })
+
+
+@require_http_methods(["DELETE", "POST"])
+@require_permission("settings.edit")
+def delete_status(request, status_id):
+    org = request.organization
+    status = SubscriptionStatus.objects.filter(id=status_id, Organization=org).first()
+    if status is None:
+        return permission_denied_response(request, "settings.edit")
+    if status.subscription_set.exists():
+        return toast_response("هذه الحالة مُستخدمة — انقل الاشتراكات أولًا", type="error")
+
+    status.delete()
+    return toast_response("تم حذف الحالة بنجاح", type="success", name_trigger="statusesChanged")

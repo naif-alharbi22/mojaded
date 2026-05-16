@@ -48,12 +48,14 @@
                 </td>
                 <td class="px-6 py-4 text-left">
                     <div class="flex items-center justify-end gap-2">
+                        {% if u.id != organization.owner_id and u.id != request.user.id %}
                         <button class="btn btn-ghost btn-sm text-g hover:bg-g/10"
                             hx-get="{% url 'setting:edit_user' u.id %}"
                             hx-target="#main-content" hx-swap="beforeend"
                             title="تعديل">
                             <i data-lucide="edit" class="w-4 h-4"></i>
                         </button>
+                            {% endif %}
                         {% if u.id != organization.owner_id and u.id != request.user.id %}
                         <button class="btn btn-ghost btn-sm text-red-400 hover:bg-red-400/10"
                             hx-delete="{% url 'setting:delete_user' u.id %}"

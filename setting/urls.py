@@ -18,4 +18,10 @@ urlpatterns = [
     path("roles/new/", views.new_role, name="new_role"),
     path("roles/<int:role_id>/edit/", views.edit_role, name="edit_role"),
     path("roles/<int:role_id>/delete/", views.delete_role, name="delete_role"),
+
+    # Subscription statuses
+    path("statuses/", views.statuses_list, name="statuses_list"),
+    path("statuses/new/", views.new_status, name="new_status"),
+    path("statuses/<int:status_id>/edit/", views.edit_status, name="edit_status"),
+    path("statuses/<int:status_id>/delete/", views.delete_status, name="delete_status"),
 ]
