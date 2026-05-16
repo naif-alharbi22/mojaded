@@ -36,18 +36,24 @@ class Plan(models.Model):
     def __str__(self):
         return self.name
 
+class SubscriptionStatus(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    Organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="subscription_statuses",
+    )
+    is_default = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
 class Subscription(models.Model):
     objects = TenantManager()
 
-    STATUS_CHOICES = [
-    ("pending", _("Pending")),
-    ("active", _("Active")),        
-    ("past_due", _("Past Due")),
-    ("trial", _("Trial")), 
-    ("paused", _("Paused")),
-    ("cancelled", _("Cancelled")), 
-    ("expired", _("Expired")),        
-]
+    
     TYPE_CHOICES = [
         ("yearly", _("Yearly")),
         ("monthly", _("Monthly")),
@@ -78,10 +84,11 @@ class Subscription(models.Model):
     start_date = models.DateField()
     next_billing_date = models.DateField(null=True, blank=True)
 
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default="active",
+    status = models.ForeignKey(
+        SubscriptionStatus,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
     duration_months = models.PositiveIntegerField(default=1)
 

@@ -21,7 +21,7 @@
     </div>
 
     <div class="bg-dark3 shadow rounded-lg p-6">
-      <h2 class="text-lg font-semibold mb-4">الإيرادات الشهرية</h2>
+      <h2 class="text-lg font-semibold mb-4">إيرادات الشهر الحالي</h2>
       <p class="text-3xl font-bold">{{ monthly_revenue|floatformat:0 }}</p>
       <p class="text-sm text-muted mt-2">
         {% if monthly_revenue_delta is None %}لا توجد بيانات للمقارنة
@@ -31,12 +31,12 @@
     </div>
 
     <div class="bg-dark3 shadow rounded-lg p-6">
-      <h2 class="text-lg font-semibold mb-4">العملاء النشطين</h2>
-      <p class="text-3xl font-bold">{{ active_customers }}</p>
+      <h2 class="text-lg font-semibold mb-4">الاشتراكات النشطة</h2>
+      <p class="text-3xl font-bold">{{ active_subscriptions }}</p>
       <p class="text-sm text-muted mt-2">
-        {% if active_customers_delta is None %}لا توجد بيانات للمقارنة
-        {% elif active_customers_delta >= 0 %}زيادة بنسبة {{ active_customers_delta }}% عن الشهر الماضي
-        {% else %}انخفاض بنسبة {{ active_customers_delta|cut:"-" }}% عن الشهر الماضي{% endif %}
+        {% if active_subscriptions_delta is None %}لا توجد بيانات للمقارنة
+        {% elif active_subscriptions_delta >= 0 %}زيادة بنسبة {{ active_subscriptions_delta }}% عن الشهر الماضي
+        {% else %}انخفاض بنسبة {{ active_subscriptions_delta|cut:"-" }}% عن الشهر الماضي{% endif %}
       </p>
     </div>
 

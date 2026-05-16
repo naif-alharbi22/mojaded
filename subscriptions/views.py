@@ -7,8 +7,9 @@ from accounts.permissions import permission_denied_response, require_permission
 from common.toast_utils import toast_response
 from customers.models import Customer
 from subscriptions.forms import NewSubscriptionForm, PlanForm
-from subscriptions.models import Plan, Subscription
+from subscriptions.models import Plan, Subscription, SubscriptionStatus
 from activity.services import ActivityLogService
+from django.db.models import Q
 
 
 def paywall(request):
@@ -98,7 +99,9 @@ def new_subscriptions(request):
         "form": form,
         "customers": Customer.objects.for_org(org),
         "plans": Plan.objects.for_org(org),
-        "status_choices": Subscription.STATUS_CHOICES,
+        "status_choices": SubscriptionStatus.objects.filter(
+            Q(Organization=org) | Q(Organization__isnull=True)
+        ).order_by("-is_default", "name"),
         "today": timezone.localdate(),
     }
 

@@ -106,15 +106,9 @@
 
     <select name="status" class="bg-dark4 border border-g/20 text-textMain rounded-lg outline-none transition-all px-4 py-2 w-full focus:border-g focus:ring-2 focus:ring-g/10">
         <option value="" {% if not form.status.value %}selected{% endif %}>اختيار الحالة</option>
-        {% for value, label in status_choices %}
-            <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>
-                {% if value == "pending" %}بانتظار الدفع{% endif %}
-                {% if value == "active" %}نشط{% endif %}
-                {% if value == "past_due" %}متأخر{% endif %}
-                {% if value == "trial" %}تجريبي{% endif %}
-                {% if value == "paused" %}موقوف مؤقتًا{% endif %}
-                {% if value == "cancelled" %}ملغي{% endif %}
-                {% if value == "expired" %}منتهي{% endif %}
+        {% for s in status_choices %}
+            <option value="{{ s.id }}" {% if form.status.value|stringformat:"s" == s.id|stringformat:"s" %}selected{% endif %}>
+                {{ s.name }}
             </option>
         {% endfor %}
     </select>

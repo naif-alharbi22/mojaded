@@ -1,0 +1,34 @@
+{% load static %}
+<dialog id="modal" class="modal modal-open">
+<form method="post"
+      hx-post="{% if status %}{% url 'setting:edit_status' status.id %}{% else %}{% url 'setting:new_status' %}{% endif %}"
+      hx-target="#modal" hx-swap="innerHTML"
+      class="modal-box max-w-md p-0 overflow-hidden rounded-2xl bg-dark2 border border-g/20 shadow-2xl">
+    {% csrf_token %}
+
+    <div class="px-6 py-4 border-b border-g/10 flex items-center justify-between bg-dark3">
+        <h3 class="text-base font-bold px-4 py-1.5 rounded-lg bg-[#00c98d]/10 text-[#00c98d] border border-[#00c98d]/20">
+            {% if status %}تعديل حالة{% else %}إضافة حالة{% endif %}
+        </h3>
+        <button type="button" onclick="closeModal(this)"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <div class="p-6 space-y-5 bg-dark">
+        <div>
+            <label class="label"><span class="label-text">اسم الحالة</span></label>
+            <input type="text" name="name" value="{{ form.name.value|default:'' }}" required maxlength="20"
+                   class="input input-bordered w-full" autofocus>
+            {% if form.name.errors %}<span class="text-red-500 text-xs">{{ form.name.errors.0 }}</span>{% endif %}
+        </div>
+
+        
+    </div>
+
+    <div class="px-6 py-4 border-t border-g/10 bg-dark3 flex justify-end gap-3">
+        <button type="button" onclick="closeModal(this)" class="px-5 py-2.5 rounded-lg text-sm font-medium text-muted hover:text-textMain">إلغاء</button>
+        <button type="submit" class="px-6 py-2.5 rounded-lg text-sm font-bold bg-g text-dark hover:bg-g2">
+            {% if status %}حفظ{% else %}إنشاء{% endif %}
+        </button>
+    </div>
+</form>
+</dialog>
