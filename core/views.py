@@ -109,7 +109,7 @@ def register_view(request):
             user.organization = org
             user.save()
 
-        login(request, user)
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
         return redirect("dashboard:dashboard")
 
     return render(request, "register.html")
