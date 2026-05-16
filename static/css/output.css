@@ -3709,6 +3709,9 @@ hr, .divider { border-color: var(--border) !important; }
 .mb-\[4rem\] {
   margin-bottom: 4rem;
 }
+.mr-1 {
+  margin-right: 0.25rem;
+}
 .mt-0\.5 {
   margin-top: 0.125rem;
 }
@@ -3723,9 +3726,6 @@ hr, .divider { border-color: var(--border) !important; }
 }
 .mt-6 {
   margin-top: 1.5rem;
-}
-.mr-1 {
-  margin-right: 0.25rem;
 }
 .block {
   display: block;
@@ -3916,11 +3916,11 @@ hr, .divider { border-color: var(--border) !important; }
 .flex-1 {
   flex: 1 1 0%;
 }
-.flex-shrink-0 {
-  flex-shrink: 0;
-}
 .flex-shrink {
   flex-shrink: 1;
+}
+.flex-shrink-0 {
+  flex-shrink: 0;
 }
 .shrink-0 {
   flex-shrink: 0;
@@ -4378,6 +4378,10 @@ hr, .divider { border-color: var(--border) !important; }
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
 }
+.py-10 {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
 .py-16 {
   padding-top: 4rem;
   padding-bottom: 4rem;
@@ -4414,15 +4418,14 @@ hr, .divider { border-color: var(--border) !important; }
   padding-top: 6px;
   padding-bottom: 6px;
 }
-.py-10 {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-}
 .pb-2 {
   padding-bottom: 0.5rem;
 }
 .pb-20 {
   padding-bottom: 5rem;
+}
+.pb-3 {
+  padding-bottom: 0.75rem;
 }
 .pb-4 {
   padding-bottom: 1rem;
@@ -4432,9 +4435,6 @@ hr, .divider { border-color: var(--border) !important; }
 }
 .pt-4 {
   padding-top: 1rem;
-}
-.pb-3 {
-  padding-bottom: 0.75rem;
 }
 .pt-5 {
   padding-top: 1.25rem;
