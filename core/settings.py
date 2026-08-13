@@ -90,6 +90,7 @@ ALLOWED_HOSTS = [
     "mojaded-742969944647.europe-west1.run.app",
     "localhost",
     "127.0.0.1",
+    "mojaded.naif-alharbi.dev"
 ]
 WSGI_APPLICATION = 'core.wsgi.application'
 
@@ -106,6 +107,10 @@ if os.environ.get('DB_HOST'):
             'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
             'HOST': os.environ.get('DB_HOST', 'db'),
             'PORT': os.environ.get('DB_PORT', '5432'),
+            'CONN_MAX_AGE': int(os.environ.get('DB_CONN_MAX_AGE', 60)),
+            'OPTIONS': {
+                'sslmode': os.environ.get('DB_SSLMODE', 'prefer'),
+            },
         }
     }
 else:
